@@ -23,7 +23,7 @@ public class SpringPropertiesOverloadingTest {
     @Value("${var2}") private String propertyValue;
     
     @Test
-    public void springPropertiesAreLoadedFromSingleFileAndAccessedViaTheSpringValueAnnotation() {
+    public void springPropertiesAreLoadedFromMultipleFilesInOrderAndAccessedViaTheSpringValueAnnotation() {
         assertThat(propertyValue, is(equalTo("MY SECOND VAR (THIS ONE WINS)")));
     }
 }
