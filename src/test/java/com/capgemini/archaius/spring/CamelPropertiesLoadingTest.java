@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 
 /**
  *
@@ -37,7 +36,7 @@ public class CamelPropertiesLoadingTest {
         
         propertyValue = context.resolvePropertyPlaceholders(propertyKey);
         
-//        assertThat(context, is(not(null)));
+        assertThat("The context cannot be null.", context != null);
         assertThat(propertyValue, is(equalTo("MY SECOND VAR")));
     }
 }

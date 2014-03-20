@@ -7,7 +7,6 @@ import org.springframework.core.io.Resource;
 
 /**
  * 
- * 
  * @author Andrew Harmel-Law
  */
 public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyPlaceholderConfigurer {
