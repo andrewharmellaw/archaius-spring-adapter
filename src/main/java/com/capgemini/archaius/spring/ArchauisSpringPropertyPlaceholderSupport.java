@@ -40,7 +40,7 @@ class ArchauisSpringPropertyPlaceholderSupport {
         }
     }
     
-    protected void setLocations(Resource[] locations) {
+    protected void setLocations(Resource[] locations) throws Exception {
         
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, "There was already a config source (or sources) configured");
@@ -50,14 +50,18 @@ class ArchauisSpringPropertyPlaceholderSupport {
         try {
             ConcurrentCompositeConfiguration config = new ConcurrentCompositeConfiguration();
             for (int i = locations.length -1 ; i >= 0 ; i--) {
-                config.addConfiguration(new PropertiesConfiguration(locations[i].getURL()));
+                try {
+                    config.addConfiguration(new PropertiesConfiguration(locations[i].getURL()));
+                } catch (IOException ex) {
+                    Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
+                    if (super.ignoreResourceNotFound != true) throw ex;
+                } 
             }
             
             DynamicPropertyFactory.initWithConfigurationSource(config);
-        } catch (IOException ex) {
+        }  catch (ConfigurationException ex) {
             Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ConfigurationException ex) {
-            Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
         }
     }
 }

@@ -16,14 +16,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author aharmel-law
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/springPropertiesOverloadingTest.xml"})
+@ContextConfiguration(locations = {"classpath:spring/springPropertiesMissingFileTest.xml"})
 @ActiveProfiles("default")
-public class SpringPropertiesOverloadingTest {
+public class SpringPropertiesMissingFileTest {
     
     @Value("${var2}") private String propertyValue;
     
     @Test
-    public void springPropertiesAreLoadedFromMultipleFilesInOrderAndAccessedViaTheSpringValueAnnotation() {
-        assertThat(propertyValue, is(equalTo("MY SECOND VAR (THIS ONE WINS)")));
+    public void missingSpringPropertiesFilesIsOkIfIgnoreResourceNotFoundPropertySet() {
+        assertThat(propertyValue, is(equalTo("MY SECOND VAR")));
     }
 }

@@ -7,10 +7,6 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.12.2.xsd">
 
-    <context:annotation-config/>
-
-    <context:component-scan base-package="com.capgemini.archaius.example"/>
-
     <!-- Config loading via Spring-Archaius-->
     <bean class="com.capgemini.archaius.spring.ArchaiusBridgePropertyPlaceholderConfigurer">
         <property name="location" value="classpath:properties/system.properties" />
