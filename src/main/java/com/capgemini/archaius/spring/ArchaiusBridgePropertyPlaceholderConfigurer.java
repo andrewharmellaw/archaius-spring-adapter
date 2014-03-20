@@ -30,7 +30,7 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     
     // Lifted totally from the Camel class
     @Override 
-    protected void  processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
+    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
  
         // store all the spring properties so we can refer to them later
         properties.putAll(props); 
@@ -41,20 +41,20 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     
     // Lifted totally from the Camel class
     @Override
-    public Properties resolveProperties(CamelContext context, boolean ignoreMissingLocation, String ... uri) throws Exception {
+    public Properties resolveProperties(CamelContext context, boolean ignoreMissingLocation, String ... uris) throws Exception {
         
         Properties answer = new Properties();
  
-        for (String u : uri) {
+        for (String uri : uris) {
             String ref = "ref:" + id;
  
-            if (ref.equals(u)) {
+            if (ref.equals(uri)) {
  
                 answer.putAll(properties);
 
             } else if (resolver != null) {
  
-                Properties p = resolver.resolveProperties(context, ignoreMissingLocation, u);
+                Properties p = resolver.resolveProperties(context, ignoreMissingLocation, uri);
  
                 if (p != null) {
                     answer.putAll(p);
@@ -74,10 +74,21 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     @Override
     public void setLocation(Resource location) {
         propertyPlaceholderSupport.setLocation(location);
+        super.setLocation(location);
     }
     
     @Override
     public void setLocations(Resource[] locations) {
         propertyPlaceholderSupport.setLocations(locations);
+        super.setLocations(locations);
     }
+    
+//    /**
+//     * Set if failure to find the property resource should be ignored.
+//     * <p>"true" is appropriate if the properties file is completely optional.
+//     * Default is "false".
+//     */
+//    public void setIgnoreResourceNotFound(boolean ignoreResourceNotFound) {
+//        this.ignoreResourceNotFound = ignoreResourceNotFound;
+//    }
 }
