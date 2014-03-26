@@ -15,7 +15,7 @@ import org.springframework.core.io.Resource;
  *
  * @author Andrew Harmel-Law
  */
-class ArchauisSpringPropertyPlaceholderSupport {
+class ArchaiusSpringPropertyPlaceholderSupport {
     
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, "this is the default value - it's not defined in any properties source yet!").get();
