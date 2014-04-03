@@ -16,6 +16,14 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     
     private ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
     
+    private boolean ignoreResourceNotFound = true;
+    
+    @Override
+    public void setIgnoreResourceNotFound(boolean setting) {
+        ignoreResourceNotFound = setting;
+        propertyPlaceholderSupport.setIgnoreResourceNotFound(ignoreResourceNotFound);
+    }
+    
     @Override
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return propertyPlaceholderSupport.resolvePlaceholder(placeholder, props, systemPropertiesMode);

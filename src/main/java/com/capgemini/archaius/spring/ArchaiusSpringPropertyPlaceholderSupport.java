@@ -16,6 +16,12 @@ import org.springframework.core.io.Resource;
  * @author Andrew Harmel-Law
  */
 class ArchaiusSpringPropertyPlaceholderSupport {
+
+    private boolean ignoreResourceNotFound = true;
+    
+    public void setIgnoreResourceNotFound(boolean setting) {
+        ignoreResourceNotFound = setting;
+    }
     
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, "this is the default value - it's not defined in any properties source yet!").get();
@@ -54,7 +60,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                     config.addConfiguration(new PropertiesConfiguration(locations[i].getURL()));
                 } catch (IOException ex) {
                     Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
-//                    if (super.ignoreResourceNotFound != true) throw ex;
+                    if (ignoreResourceNotFound != true) throw ex;
                 } 
             }
             
