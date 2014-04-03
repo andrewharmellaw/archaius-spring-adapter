@@ -54,7 +54,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                     config.addConfiguration(new PropertiesConfiguration(locations[i].getURL()));
                 } catch (IOException ex) {
                     Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
-                    if (super.ignoreResourceNotFound != true) throw ex;
+//                    if (super.ignoreResourceNotFound != true) throw ex;
                 } 
             }
             

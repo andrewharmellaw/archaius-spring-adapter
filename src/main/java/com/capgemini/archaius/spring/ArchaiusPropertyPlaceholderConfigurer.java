@@ -1,6 +1,8 @@
 package com.capgemini.archaius.spring;
 
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
@@ -12,7 +14,7 @@ import org.springframework.core.io.Resource;
  */
 public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
     
-    private ArchauisSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchauisSpringPropertyPlaceholderSupport();
+    private ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
     
     @Override
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
@@ -26,6 +28,11 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     
     @Override
     public void setLocations(Resource[] locations) {
-        propertyPlaceholderSupport.setLocations(locations);
+        try {
+            propertyPlaceholderSupport.setLocations(locations);
+        } catch (Exception ex) {
+            Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Problem setting the locations.", ex);
+        }
     }
 }

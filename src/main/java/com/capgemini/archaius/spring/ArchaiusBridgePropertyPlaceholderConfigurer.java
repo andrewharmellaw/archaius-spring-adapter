@@ -1,6 +1,8 @@
 package com.capgemini.archaius.spring;
 
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
@@ -11,7 +13,7 @@ import org.springframework.core.io.Resource;
  */
 public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyPlaceholderConfigurer {
     
-    private ArchauisSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchauisSpringPropertyPlaceholderSupport();
+    private ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
     
     @Override
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
@@ -26,7 +28,12 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     
     @Override
     public void setLocations(Resource[] locations) {
-        propertyPlaceholderSupport.setLocations(locations);
+        try {
+            propertyPlaceholderSupport.setLocations(locations);
+        } catch (Exception ex) {
+            Logger.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Problem setting the locations.", ex);
+        }
         super.setLocations(locations);
     }
 }
