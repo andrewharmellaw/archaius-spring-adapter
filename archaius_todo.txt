@@ -1,22 +1,24 @@
 Backlog
 *******
-Unit tests - Spring (@Value, !!!context/env!!!) - IN PROGRESS
+Unit tests - Spring (@Value) - DONE
 Remove test springPropertiesAreLoadedFromSingleFileAndAccessedViaPropertiesLoadersUtils and document on wiki (see javadoc comment)
-Unit tests - Camel - IN PROGRESS - NB the note about the package in the Camel code
+Unit tests - Camel - DONE
 Get archaius working for static properties with a spring project - DONE
 Get additionalUrls to use the standard location property from the spring config "location" - DONE
 Get additionalUrls to use the standard location property from the spring config "locations" - DONE
-Get additionalUrls to work and respect "source file missing" (or whatever it is)
+Get additionalUrls to work and respect "source file missing" (or whatever it is) - DONE
 Get it working with Camel - org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer - DONE
 Tidy up the Camel / non-camel duplication - DONE
-Fix the logging (change for SL4J / logback)
-Put in proper exception handling
-factor out the common prod code
+factor out the common prod code - DONE
 factor out the common test code - DONE
 Move the package - DONE
 Rename - DONE
+Remember to thank folks at: https://github.com/Netflix/archaius/issues/113 - DONE
+
+Unit tests - Spring context/env
+Fix the logging (change for SL4J / logback)
+Put in proper exception handling
 Javadoc
-Remember to thank folks at: https://github.com/Netflix/archaius/issues/113
 get Russ's opinion on why, having added forking to the surefire plugin, I need to have spring-web (!?!?!)
 Make it dynamic - c.f. http://java.dzone.com/articles/dynamic-property-management
 SL4J Loggging in the example
@@ -26,5 +28,5 @@ Package it
 Release it
 set up a cloudbees build for the github project
 get the JAR into a maven repo
-"How to Use" page on the wiki
-"How to Contribute" page on the wiki
+"How to Use" page on the wiki - DONE
+"How to Contribute" page on the wiki - DONE
