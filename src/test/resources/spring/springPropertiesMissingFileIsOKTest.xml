@@ -13,7 +13,7 @@
                 <value>classpath:/META-INF/file-not-there.properties</value>
             </list>
         </property>
-        <property name="ignoreResourceNotFound" value="true" />
+        
     </bean>
 
 </beans>
