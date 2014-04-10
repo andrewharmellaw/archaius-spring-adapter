@@ -13,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -23,8 +24,9 @@ import static org.hamcrest.CoreMatchers.is;
 @ActiveProfiles("default")
 public class CamelPropertiesOverloadingTest {
     
-    private final String propertyKey = "{{var2}}";
-    private String propertyValue;
+    private final String camelPropertyKey = "{{var2}}";
+    private String camelPropertyValue;
+    @Value("${var2}") private String springPropertyValue;
     
     @Autowired
     @Qualifier("camel")
@@ -34,9 +36,14 @@ public class CamelPropertiesOverloadingTest {
     @Test
     public void camelPropertiesAreLoadedFromMultipleFilesInOrderAndAccessedViaTheCamelContext() throws Exception {
         
-        propertyValue = context.resolvePropertyPlaceholders(propertyKey);
+        camelPropertyValue = context.resolvePropertyPlaceholders(camelPropertyKey);
         
         assertThat("The context cannot be null.", context != null);
-        assertThat(propertyValue, is(equalTo("MY SECOND VAR (THIS ONE WINS)")));
+        assertThat(camelPropertyValue, is(equalTo("MY SECOND VAR (THIS ONE WINS)")));
+    }
+    
+    @Test
+    public void springPropertiesAreAlsoLoadedFromMultipleFilesInOrderAndAccessedViaTheSpringValueAnnotation() {
+        assertThat(springPropertyValue, is(equalTo("MY SECOND VAR (THIS ONE WINS)")));
     }
 }

@@ -22,6 +22,8 @@ import static org.hamcrest.CoreMatchers.is;
 @ContextConfiguration(locations = {"classpath:camel/camelPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class CamelPropertiesLoadingTest {
+
+    // TODO: Spring properties should also be loaded fine
     
     private final String propertyKey = "{{var2}}";
     private String propertyValue;

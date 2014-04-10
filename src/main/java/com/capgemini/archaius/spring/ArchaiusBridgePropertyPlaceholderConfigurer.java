@@ -1,10 +1,10 @@
 package com.capgemini.archaius.spring;
 
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 /**
@@ -13,7 +13,16 @@ import org.springframework.core.io.Resource;
  */
 public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyPlaceholderConfigurer {
     
-    private ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class);
+    
+    private final ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();    
+    private boolean ignoreResourceNotFound;
+    
+    @Override
+    public void setIgnoreResourceNotFound(boolean setting) {
+        ignoreResourceNotFound = setting;
+        super.setIgnoreResourceNotFound(setting);
+    }
     
     @Override
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
@@ -22,16 +31,21 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     
     @Override
     public void setLocation(Resource location) {
-        propertyPlaceholderSupport.setLocation(location);
+        try {
+            propertyPlaceholderSupport.setLocation(location);
+        } catch (Exception ex) {
+            LOGGER.error("Problem setting the location.", ex);
+            throw new RuntimeException("Problem setting the location.", ex);
+        }
         super.setLocation(location);
     }
     
     @Override
     public void setLocations(Resource[] locations) {
         try {
-            propertyPlaceholderSupport.setLocations(locations);
+            propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound);
         } catch (Exception ex) {
-            Logger.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Problem setting the locations", ex);
             throw new RuntimeException("Problem setting the locations.", ex);
         }
         super.setLocations(locations);

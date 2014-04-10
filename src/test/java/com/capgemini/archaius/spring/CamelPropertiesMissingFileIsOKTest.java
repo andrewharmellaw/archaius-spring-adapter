@@ -23,9 +23,10 @@ import org.springframework.test.annotation.DirtiesContext;
 @ContextConfiguration(locations = {"classpath:camel/camelPropertiesMissingFileIsOKTest.xml"})
 @ActiveProfiles("default")
 public class CamelPropertiesMissingFileIsOKTest {
-
-    private final String propertyKey = "{{var2}}";
-    private String propertyValue;
+    
+    private final String camelPropertyKey = "{{var2}}";
+    private String camelPropertyValue;
+    @Value("${var2}") private String springPropertyValue;
     
     @Autowired
     @Qualifier("camel")
@@ -35,10 +36,14 @@ public class CamelPropertiesMissingFileIsOKTest {
     @Test
     public void camelPropertiesAreLoadedFromMultipleFilesInOrderAndAccessedViaTheCamelContext() throws Exception {
         
-        propertyValue = context.resolvePropertyPlaceholders(propertyKey);
+        camelPropertyValue = context.resolvePropertyPlaceholders(camelPropertyKey);
         
         assertThat("The context cannot be null.", context != null);
-        assertThat(propertyValue, is(equalTo("MY SECOND VAR")));
+        assertThat(camelPropertyValue, is(equalTo("MY SECOND VAR")));
     }
     
+    @Test
+    public void missingSpringPropertiesFilesIsAlsoOkIfIgnoreResourceNotFoundPropertySetToTrue() {
+        assertThat(springPropertyValue, is(equalTo("MY SECOND VAR")));
+    }
 }

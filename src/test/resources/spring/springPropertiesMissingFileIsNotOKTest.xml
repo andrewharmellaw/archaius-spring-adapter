@@ -7,7 +7,7 @@
 
     <!-- Config loading via Spring-Archaius-->
     <bean class="com.capgemini.archaius.spring.ArchaiusPropertyPlaceholderConfigurer">
-        <property name="ignoreResourceNotFound" value="false" />
+        <property name="ignoreResourceNotFound" value="false" /> <!-- This must come before the locations -->
         <property name="locations">
             <list>
                 <value>classpath:/META-INF/system.properties</value>

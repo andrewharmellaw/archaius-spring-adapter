@@ -1,9 +1,9 @@
 package com.capgemini.archaius.spring;
 
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 
@@ -14,14 +14,15 @@ import org.springframework.core.io.Resource;
  */
 public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
     
-    private ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusPropertyPlaceholderConfigurer.class);
     
+    private final ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
     private boolean ignoreResourceNotFound = true;
     
     @Override
     public void setIgnoreResourceNotFound(boolean setting) {
         ignoreResourceNotFound = setting;
-        propertyPlaceholderSupport.setIgnoreResourceNotFound(ignoreResourceNotFound);
+        super.setIgnoreResourceNotFound(setting);
     }
     
     @Override
@@ -31,15 +32,21 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     
     @Override
     public void setLocation(Resource location) {
-        propertyPlaceholderSupport.setLocation(location);
+        try {
+            propertyPlaceholderSupport.setLocation(location);
+        } catch (Exception ex) {
+            LOGGER.error("Problem setting the location.", ex);
+            throw new RuntimeException("Problem setting the location.", ex);
+        }
     }
     
     @Override
     public void setLocations(Resource[] locations) {
         try {
-            propertyPlaceholderSupport.setLocations(locations);
+            propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound);
+            super.setLocations(locations);
         } catch (Exception ex) {
-            Logger.getLogger(ArchaiusPropertyPlaceholderConfigurer.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Problem setting the locations", ex);
             throw new RuntimeException("Problem setting the locations.", ex);
         }
     }

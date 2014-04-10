@@ -9,13 +9,13 @@
 
     <!-- Config loading via Spring-Archaius-->
     <bean class="com.capgemini.archaius.spring.ArchaiusBridgePropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true" /> <!-- This must come before the locations. The default is "false" if not specified. -->
         <property name="locations">
             <list>
                 <value>classpath:/META-INF/system.properties</value>
                 <value>classpath:/META-INF/file-not-there.properties</value>
             </list>
         </property>
-        <property name="ignoreResourceNotFound" value="true" />
     </bean>
     
     <camel:camelContext id="camel" />
