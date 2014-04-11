@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import com.netflix.config.ConcurrentCompositeConfiguration;
 import com.netflix.config.DynamicPropertyFactory;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusSpringPropertyPlaceholderSupport.class);
     
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
-        return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, "this is the default value - it's not defined in any properties source yet!").get();
+        return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
     
     protected void setLocation(Resource location) throws Exception {

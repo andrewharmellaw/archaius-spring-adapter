@@ -51,5 +51,4 @@ public class SpringPropertiesLoadingTest {
         
         assertThat(props.containsKey(propertyKey), is(true));
     }
-
 }
