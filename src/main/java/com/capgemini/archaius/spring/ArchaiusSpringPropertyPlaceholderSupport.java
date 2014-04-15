@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import com.netflix.config.ConcurrentCompositeConfiguration;
 import com.netflix.config.DynamicPropertyFactory;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,16 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             try {
                 config.addConfiguration(new PropertiesConfiguration(locations[i].getURL()));
             } catch (IOException ex) {
-                LOGGER.error("IOException thrown when adding a configuration location.", ex);
-                if (ignoreResourceNotFound != true) throw ex;
-            } 
+                if (ignoreResourceNotFound != true) {
+                    LOGGER.error("IOException thrown when adding a configuration location.", ex);
+                    throw ex;
+                }
+            } catch (ConfigurationException ce) {
+                if (ignoreResourceNotFound != true) {
+                    LOGGER.error("ConfigurationException thrown when adding a configuration location.", ce);
+                    throw ce;
+                }
+            }
         }
 
         DynamicPropertyFactory.initWithConfigurationSource(config);
