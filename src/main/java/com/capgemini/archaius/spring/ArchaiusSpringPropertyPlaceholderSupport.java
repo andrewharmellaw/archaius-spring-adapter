@@ -47,15 +47,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         for (int i = locations.length -1 ; i >= 0 ; i--) {
             try {
                 config.addConfiguration(new PropertiesConfiguration(locations[i].getURL()));
-            } catch (IOException ex) {
+            } catch (IOException | ConfigurationException ex) {
                 if (ignoreResourceNotFound != true) {
                     LOGGER.error("IOException thrown when adding a configuration location.", ex);
                     throw ex;
-                }
-            } catch (ConfigurationException ce) {
-                if (ignoreResourceNotFound != true) {
-                    LOGGER.error("ConfigurationException thrown when adding a configuration location.", ce);
-                    throw ce;
                 }
             }
         }
