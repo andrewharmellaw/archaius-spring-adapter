@@ -1,4 +1,6 @@
-Welcome
+Archaius Spring Adapter
+===============================
+
 Welcome to the archaius-spring-adapter. As we say in the POM, our aim is to 
 simply extend the Spring (and Camel) PropertyPlaceholders in order to support 
 Netflix's Archaius as the single of all property information.
@@ -24,6 +26,8 @@ We'd like to thank the guys there for their support, and permission to release
 this code licensed under the Apache v2.0 OSS licence.
 
 Get Started
+-----------
+
 It's dead simple to use the adapter. Just fork the project to your GitHub 
 account (handy if you want to make a pull request later) and then clone it 
 locally (we're not yet in a Maven repo, sorry).  Then simply run:
@@ -102,19 +106,29 @@ but you need to use a different bean class:
 
     </beans>
 
-That' it.
+That's it!
 
 Getting Involved
+----------------
+
 We're clearly sorting out support for our own problems first, but its clear that 
 there is much more we could add to this project.  We'd love to have
 contributions from folks in all the standard ways:
 
-1) Questions and Answers via the Google Group
-2) Issue Reports via GitHub
-3) Pull Requests (fixes, more tests, new features, typo-corrections etc) via GitHub 
+1. Questions and Answers via the Google Group
+1. Issue Reports via GitHub
+1. Pull Requests (fixes, more tests, new features, typo-corrections etc) via GitHub 
 (we follow the standard workflow)
-4) Wiki documentation
+1. Wiki documentation
 
 We maintain a list of the issues that we're working on as you'd expect.  By
 looking there you can see what our priorities are.  Please feel free to comment
 on any of them or add more.
+
+Developers
+----------
+
+* [Andrew Harmel-Law](https://github.com/andrewharmellaw)
+* [Gaythu Rajan](https://github.com/gaythu-rajan)
+* [Nick Walter](https://github.com/nickjwalter)
+* [Russell Hart](https://github.com/rhart)
