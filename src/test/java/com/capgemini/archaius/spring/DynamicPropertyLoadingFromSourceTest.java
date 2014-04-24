@@ -35,11 +35,10 @@ public class DynamicPropertyLoadingFromSourceTest {
     public void setup() throws IOException, InterruptedException {
         updatePropertiesFile(PROPERTY_VALUE);
         Thread.sleep(100);
-
     }
 
     @Test
-    public void testChangingTheValue() throws IOException, InterruptedException {
+    public void testChangingThePropertiesFileUpdatesTheProperties() throws IOException, InterruptedException {
 
         // check the value now
         propertyValue = DynamicPropertyFactory.getInstance().getStringProperty("var2", null).getValue();
@@ -63,7 +62,7 @@ public class DynamicPropertyLoadingFromSourceTest {
     }
 
     @Test
-    public void testDeletingAValueFromSource() throws IOException, InterruptedException {
+    public void testDeletingPropertyValueInFileRemovesTheProperties() throws IOException, InterruptedException {
         // check the value now
         propertyValue = DynamicPropertyFactory.getInstance().getStringProperty("var2", null).getValue();
         assertEquals("MY SECOND VAR", propertyValue);
