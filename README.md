@@ -1,3 +1,5 @@
+[![Build Status](https://buildhive.cloudbees.com/job/Capgemini/job/archaius-spring-adapter/badge/icon)](https://buildhive.cloudbees.com/job/Capgemini/job/archaius-spring-adapter/)
+
 Archaius Spring Adapter
 ===============================
 
