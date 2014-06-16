@@ -9,14 +9,15 @@ import spock.lang.Specification
  * @author: Gayathri Thiyagarajan
  * @version: 1.0
  */
-@ActiveProfiles("default")
+@ActiveProfiles('default')
 class SpringPropertiesMissingFileIsNotOkSpec extends Specification {
 
     def "missing spring properties files is not ok if IgnoreResourceNotFound property set to false" () {
         when:
-            ctx = new ClassPathXmlApplicationContext("spring/springPropertiesMissingFileIsNotOKTest.xml");
+            ctx = new ClassPathXmlApplicationContext('spring/springPropertiesMissingFileIsNotOKTest.xml');
         then:
             BeanCreationException bce = thrown();
-            bce.getCause().getMessage() == "Failed properties: Property 'locations' threw exception; nested exception is java.lang.RuntimeException: Problem setting the locations.";
+            bce.cause.message == 'Failed properties: Property \'locations\' threw exception; nested exception is ' +
+                    'java.lang.RuntimeException: Problem setting the locations.';
     }
 }
