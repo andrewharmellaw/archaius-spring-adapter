@@ -251,8 +251,10 @@
                 <artifactId>codenarc-maven-plugin</artifactId>
                 <version>0.18-1</version>
                 <configuration>
-                    <codenarc.version>0.21</codenarc.version>
+                    <codeNarcVersion>0.21</codeNarcVersion>
+                    <groovyVersion>${groovy.version}</groovyVersion>
                     <sourceDirectory>src/test/groovy</sourceDirectory>
+                    <includes>src/test/resources/codenarc.properties</includes>
                     <rulesetfiles>rulesets/basic.xml,rulesets/exceptions.xml,rulesets/imports.xml,rulesets/unnecessary.xml,rulesets/unused.xml,rulesets/groovyism.xml,rulesets/formatting.xml</rulesetfiles>
                     <maxPriority1Violations>0</maxPriority1Violations>
                     <maxPriority2Violations>0</maxPriority2Violations>

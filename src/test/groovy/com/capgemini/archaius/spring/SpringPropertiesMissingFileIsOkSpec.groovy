@@ -18,6 +18,6 @@ class SpringPropertiesMissingFileIsOkSpec extends Specification {
 
     def "missing spring properties files is ok if IgnoreResourceNotFound property set to true" () {
         expect:
-        propertyValue == expectedPropertyValue;
+        propertyValue == expectedPropertyValue
     }
 }
