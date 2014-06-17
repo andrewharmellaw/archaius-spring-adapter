@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+    <!-- Checks whether files end with a new line. -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Checks that property files contain the same keys. -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
+    <module name="Translation"/>
+    <module name="FileLength">
+        <property name="severity" value="error"/>
+        <property name="max" value="1000"/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <!-- Checks for Javadoc comments. -->
+        <!-- See http://checkstyle.sf.net/config_javadoc.html -->
+        <module name="JavadocMethod">
+            <property name="severity" value="error"/>
+            <property name="excludeScope" value="private"/>
+            <!-- AH There should be no benefit in Javadoc comments for private methods -->
+        </module>
+        <module name="JavadocType">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="severity" value="error"/>
+            <property name="excludeScope" value="private"/>
+            <!-- AH There should be no benefit in Javadoc comments for private vars -->
+        </module>
+        <!-- <module name="JavadocStyle" /> -->
+
+
+        <!-- Checks for Naming Conventions. -->
+        <!-- See http://checkstyle.sf.net/config_naming.html -->
+        <module name="ConstantName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="LocalFinalVariableName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="MemberName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="MethodName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="PackageName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="ParameterName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="StaticVariableName">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="TypeName">
+            <property name="severity" value="error"/>
+        </module>
+
+        <!-- Checks for imports -->
+        <!-- See http://checkstyle.sf.net/config_import.html -->
+        <module name="AvoidStarImport">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="IllegalImport">
+            <property name="severity" value="error"/>
+        </module>
+        <!-- defaults to sun.* packages -->
+        <module name="RedundantImport">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="UnusedImports">
+            <property name="severity" value="error"/>
+        </module>
+
+
+        <!-- Checks for Size Violations. -->
+        <!-- See http://checkstyle.sf.net/config_sizes.html -->
+
+        <module name="LineLength">
+            <property name="max" value="200"/>
+            <!-- AH: Extended to 120 as we all have modern display hardware, AM: set
+                       to 200 (artf172737) -->
+        </module>
+        <module name="MethodLength">
+            <property name="severity" value="error"/>
+            <property name="max" value="160"/>
+            <!-- CW: added extra 40 lines to cater for try catch clauses in Exception
+                       Handling. CW: Added extra 40 lines to cater for isDebugEnabled -->
+        </module>
+        <module name="ParameterNumber">
+            <property name="severity" value="error"/>
+            <property name="max" value="5"/>
+        </module>
+
+
+        <!-- Checks for whitespace -->
+        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <module name="EmptyForIteratorPad"/>
+        <!-- module name="MethodParamPad"/ -->
+        <module name="NoWhitespaceAfter">
+            <!-- ignore tokens for generics --> <!-- CW: added to ignore generics formatting -->
+            <property name="tokens" value="GENERIC_START"/>
+        </module>
+        <module name="NoWhitespaceBefore">
+            <!-- ignore tokens for generics -->
+            <property name="tokens" value="GENERIC_START, GENERIC_END"/>
+        </module>
+        <module name="OperatorWrap"/>
+        <!-- <module name="ParenPad" /> -->
+        <module name="TypecastParenPad"/>
+        <!--  <module name="FileTabCharacter"/> -->
+        <module name="WhitespaceAfter">
+            <!-- ignore tokens for generics -->
+            <property name="tokens" value="GENERIC_END"/>
+        </module>
+        <module name="WhitespaceAround">
+            <!-- ignore tokens for generics -->
+            <property name="tokens" value="GENERIC_START, GENERIC_END"/>
+        </module>
+
+        <!-- Modifier Checks -->
+        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+
+        <!-- Checks for blocks. You know, those {}'s -->
+        <!-- See http://checkstyle.sf.net/config_blocks.html -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="RightCurly"/>
+
+
+        <!-- Checks for common coding problems -->
+        <!-- See http://checkstyle.sf.net/config_coding.html -->
+        <module name="AvoidInlineConditionals">
+            <property name="severity" value="error" />
+        </module>
+        <!-- module name="DoubleCheckedLocking" / -->
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="HiddenField">
+            <property name="ignoreSetter" value="true"/>
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreAbstractMethods" value="true"/>
+        </module>
+        <module name="IllegalInstantiation"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="RedundantThrows"/>
+        <module name="SimplifyBooleanExpression">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="SimplifyBooleanReturn">
+            <property name="severity" value="error"/>
+        </module>
+
+        <!-- Checks for class design -->
+        <!-- See http://checkstyle.sf.net/config_design.html -->
+        <!--<module name="DesignForExtension" />-->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="InterfaceIsType">
+            <property name="severity" value="error"/>
+        </module>
+        <module name="VisibilityModifier">
+            <property name="severity" value="error"/>
+        </module>
+
+        <module name="TodoComment">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="UpperEll"/>
+
+    </module>
+
+</module>

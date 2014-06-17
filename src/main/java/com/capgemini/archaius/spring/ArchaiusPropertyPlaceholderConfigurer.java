@@ -15,12 +15,12 @@
  */
 package com.capgemini.archaius.spring;
 
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
+
+import java.util.Properties;
 
 /**
  * 
@@ -28,15 +28,14 @@ import org.springframework.core.io.Resource;
  * @author Andrew Harmel-Law
  */
 public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
-    
+
+    public static final int DEFAULT_DELAY = 1000;
+    // settings for dynamic property configuration
+    private int initialDelayMillis = DEFAULT_DELAY;
+    private int delayMillis = DEFAULT_DELAY;
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusPropertyPlaceholderConfigurer.class);
-    
     private final ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
     private boolean ignoreResourceNotFound = true;
-
-    // settings for dynamic property configuration
-    private int initialDelayMillis = 1000;
-    private int delayMillis = 1000;
     private boolean ignoreDeletesFromSource = true;
 
     /**

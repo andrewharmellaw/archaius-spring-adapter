@@ -28,15 +28,14 @@ import java.util.Properties;
  */
 public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyPlaceholderConfigurer {
 
+    public static final int DEFAULT_DELAY = 1000;
+    // settings for dynamic property configuration
+    private int initialDelayMillis = DEFAULT_DELAY;
+    private int delayMillis = DEFAULT_DELAY;
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class);
-
     private final ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport
             = new ArchaiusSpringPropertyPlaceholderSupport();
     private boolean ignoreResourceNotFound;
-
-    // settings for dynamic property configuration
-    private int initialDelayMillis = 1000;
-    private int delayMillis = 1000;
     private boolean ignoreDeletesFromSource = true;
 
 

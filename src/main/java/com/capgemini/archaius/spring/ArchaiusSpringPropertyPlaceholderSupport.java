@@ -15,14 +15,14 @@
  */
 package com.capgemini.archaius.spring;
 
-import java.util.Properties;
-
 import com.netflix.config.ConcurrentCompositeConfiguration;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicURLConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+
+import java.util.Properties;
 
 /**
  * This class builds the property configuration factory for the location(s) provided.
@@ -74,7 +74,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                         initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
                 ));
             } catch (Exception ex) {
-                if (ignoreResourceNotFound != true) {
+                if (!ignoreResourceNotFound) {
                     LOGGER.error("Exception thrown when adding a configuration location.", ex);
                     throw ex;
                 }
