@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="CAPP_PMD"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+    <rule ref="rulesets/basic.xml"/>
+    <rule ref="rulesets/basic-jsf.xml"/>
+    <!--rule ref="rulesets/basic-jsp.xml"/-->
+    <rule ref="rulesets/braces.xml"/>
+    <rule ref="rulesets/clone.xml"/>
+
+    <!-- The three below were in favorites.xml -->
+    <rule ref="rulesets/controversial.xml/UnnecessaryConstructor"/>
+    <rule ref="rulesets/controversial.xml/NullAssignment"/>
+    <rule ref="rulesets/controversial.xml/UnusedModifier"/>
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="ExcessiveImports"/>
+        <exclude name="TooManyMethods"/>
+        <exclude name="CyclomaticComplexity"/>
+    </rule>
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="11"/>
+            <property name="showClassesComplexity" value="false"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/TooManyMethods">
+        <properties>
+            <property name="maxmethods" value="20"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/coupling.xml"/>
+    <rule ref="rulesets/design.xml">
+        <exclude name="ConfusingTernary"/>
+    </rule>
+    <rule ref="rulesets/finalizers.xml"/>
+    <rule ref="rulesets/imports.xml"/>
+    <rule ref="rulesets/j2ee.xml"/>
+    <rule ref="rulesets/javabeans.xml"/>
+    <rule ref="rulesets/junit.xml"/>
+    <rule ref="rulesets/logging-jakarta-commons.xml">
+        <!-- This rule is broken -->
+        <exclude name="ProperLogger"/>
+    </rule>
+    <rule ref="rulesets/logging-java.xml"/>
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable"/>
+        <exclude name="LongVariable"/>
+    </rule>
+    <rule ref="rulesets/optimizations.xml">
+        <exclude name="LocalVariableCouldBeFinal"/>
+        <exclude name="MethodArgumentCouldBeFinal"/>
+        <exclude name="AvoidInstantiatingObjectsInLoops" />
+    </rule>
+    <rule ref="rulesets/scratchpad.xml">
+        <exclude name="DataflowAnomalyAnalysis"/>
+    </rule>
+    <rule ref="rulesets/strictexception.xml">
+        <exclude name="AvoidCatchingGenericException" />
+        <exclude name="AvoidThrowingRawExceptionTypes" />
+    </rule>
+    <rule ref="rulesets/strings.xml">
+        <exclude name="AvoidDuplicateLiterals"/>
+    </rule>
+    <rule ref="rulesets/sunsecure.xml"/>
+    <rule ref="rulesets/typeresolution.xml"/>
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedPrivateField"/>
+    </rule>
+
+    <rule name="AvoidCatchingGenericException"
+          message="Catch specific exceptions not java.lang.Exception"
+          class="net.sourceforge.pmd.rules.XPathRule">
+        <description>
+            java.lang.Exception should never be caught or thrown. Use the most specific exception available
+        </description>
+        <properties>
+            <property name="xpath" pluginname="true">
+                <value>
+                    <![CDATA[
+                //TryStatement/FormalParameter/Type/Name[@Image='Exception']
+                ]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule name="LongVariable"
+          message="Avoid excessively long variable names like {0}"
+          class="net.sourceforge.pmd.rules.XPathRule">
+        <description>
+            Detects when a field, formal or local variable is declared with a long name.
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="xpath" pluginname="true">
+                <value>//VariableDeclaratorId
+                    [not(../../../FieldDeclaration[@Static='true' and @Final='true'])]
+                    [string-length(@Image) &gt; 30]
+                </value>
+            </property>
+        </properties>
+        <example>
+
+        </example>
+    </rule>
+    <rule name="ShortVariable"
+          message="Avoid variables with short names like {0}"
+          class="net.sourceforge.pmd.rules.XPathRule">
+        <description>
+            Detects when a field, local or parameter has a short name.
+        </description>
+        <properties>
+            <property name="xpath" pluginname="true">
+                <value>
+                    <![CDATA[
+                //VariableDeclaratorId[string-length(@Image) < 2]
+                [not(ancestor::ForInit)]
+                [not((ancestor::FormalParameter) and (ancestor::TryStatement))]
+                ]]>
+                </value>
+            </property>
+        </properties>
+        <!--         <priority>3</priority> -->
+        <example>
+
+        </example>
+    </rule>
+
+    <rule name="CheckForIsDebugEnabled"
+          message="Call to logger.debug must be wrapped within isDebugEnabled"
+          class="net.sourceforge.pmd.rules.XPathRule">
+        <description>
+            if (logger.isDebugEnabled()) {
+            logger.debug("Something to debug");
+            }
+
+        </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//BlockStatement/Statement/StatementExpression
+[PrimaryExpression/PrimaryPrefix/Name[contains(@Image, '.debug')] and not(ancestor::IfStatement[
+      Expression/PrimaryExpression/PrimaryPrefix/Name[
+           contains(@Image, 'isDebugEnabled')
+      ]
+   ]
+   )
+]
+
+]]>
+                </value>
+            </property>
+        </properties>
+        <example>
+            <![CDATA[
+public class Test {
+
+   private static Logger logger = new Logger();
+
+    private InitialContext getInitialContext() {
+
+    if (true) {
+        if (logger.isDebugEnabled()) {
+           logger.debug("Something to debug");
+        }
+   }
+
+        logger.debug("Something to debug");
+        another.statement("ha");
+
+        return context;
+    }
+}
+
+
+]]>
+        </example>
+    </rule>
+
+    <rule name="CheckForDebugWithinCatch"
+          message="Catch statement must contain logger.error instead of logger.debug"
+          class="net.sourceforge.pmd.rules.XPathRule">
+        <description>
+            try {
+            // Some code
+            } catch (Exception nfe) {
+            LOGGER.debug("Exception");
+            }
+
+        </description>
+        <properties>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//BlockStatement/Statement/StatementExpression
+[PrimaryExpression/PrimaryPrefix/Name[contains(@Image, '.debug')] and (../../../parent::CatchStatement)
+]
+
+]]>
+                </value>
+            </property>
+        </properties>
+        <example>
+            <![CDATA[
+public class Test {
+
+   private static Logger logger = new Logger();
+
+    private InitialContext getInitialContext() {
+
+        if (logger.isDebugEnabled()) {
+           logger.debug("Something to debug");
+        }
+
+        logger.debug("Something to debug");
+
+        try {
+            doSomething();
+        } catch (NumberFormatException nfe) {
+           if (logger.isDebugEnabled()) {
+              logger.debug("invalid firm reference number : " + firmRefNumber);
+           }
+              logger.debug("invalid firm reference number : " + firmRefNumber);
+            logger.error("ads");
+        }
+        
+        return context;
+    }
+}
+
+
+]]>
+        </example>
+    </rule>
+
+</ruleset>

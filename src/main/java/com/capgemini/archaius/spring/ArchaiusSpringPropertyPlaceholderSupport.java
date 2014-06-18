@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -40,11 +41,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     protected void setLocation(Resource location,
                                int initialDelayMillis,
                                int delayMillis,
-                               boolean ignoreDeletesFromSource) throws Exception {
+                               boolean ignoreDeletesFromSource) throws IOException {
         
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
-            throw new RuntimeException("Archaius is already configured with a property source/sources.");
+            throw new IllegalStateException("Archaius is already configured with a property source/sources.");
         }
 
         final String locationURL = location.getURL().toString();
@@ -54,16 +55,16 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         DynamicPropertyFactory.initWithConfigurationSource(urlConfiguration);
     }
-    
+
     protected void setLocations(Resource[] locations,
                                 boolean ignoreResourceNotFound,
                                 int initialDelayMillis,
                                 int delayMillis,
-                                boolean ignoreDeletesFromSource) throws Exception {
+                                boolean ignoreDeletesFromSource) throws IOException {
         
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
-            throw new Exception("Archaius is already configured with a property source/sources.");
+            throw new IllegalStateException("Archaius is already configured with a property source/sources.");
         }
         
         ConcurrentCompositeConfiguration config = new ConcurrentCompositeConfiguration();
@@ -73,7 +74,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                 config.addConfiguration(new DynamicURLConfiguration(
                         initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
                 ));
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error("Exception thrown when adding a configuration location.", ex);
                     throw ex;

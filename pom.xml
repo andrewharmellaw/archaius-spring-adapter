@@ -290,6 +290,30 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.7.1</version>
+                <configuration>
+                    <targetJdk>${mvn.java.version}</targetJdk>
+                    <rulesets>
+                        <ruleset>static-analysis/pmdrules.xml</ruleset>
+                    </rulesets>
+                    <excludes>
+                        <exclude>**/target/generated-sources/**</exclude>
+                    </excludes>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

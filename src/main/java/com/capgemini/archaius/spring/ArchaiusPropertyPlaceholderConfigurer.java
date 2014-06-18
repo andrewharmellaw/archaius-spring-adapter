@@ -31,12 +31,12 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
     public static final int DEFAULT_DELAY = 1000;
     // settings for dynamic property configuration
-    private int initialDelayMillis = DEFAULT_DELAY;
-    private int delayMillis = DEFAULT_DELAY;
+    private transient int initialDelayMillis = DEFAULT_DELAY;
+    private transient int delayMillis = DEFAULT_DELAY;
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusPropertyPlaceholderConfigurer.class);
-    private final ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
-    private boolean ignoreResourceNotFound = true;
-    private boolean ignoreDeletesFromSource = true;
+    private final transient ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport = new ArchaiusSpringPropertyPlaceholderSupport();
+    private transient boolean ignoreResourceNotFound = true;
+    private transient boolean ignoreDeletesFromSource = true;
 
     /**
      * The initial delay before the property values are re-read from the location, in milliseconds
