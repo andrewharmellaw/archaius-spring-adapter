@@ -3,4 +3,5 @@
 
 <suppressions>
     <suppress files=".*target/generated-sources.*" checks=".*"/>
+    <suppress checks="NewlineAtEndOfFile" files=".*" />
 </suppressions>

@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
+import com.capgemini.archaius.spring.util.JdbcContants;
 import com.netflix.config.ConcurrentCompositeConfiguration;
 import com.netflix.config.DynamicConfiguration;
 
@@ -41,11 +42,10 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusJdbcBridgePropertyPlaceholderConfigurer.class);
     private final transient ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport
             = new ArchaiusSpringPropertyPlaceholderSupport();
-    private transient boolean ignoreResourceNotFound;
+    private transient boolean ignoreResourceNotFound = true;
     private transient boolean ignoreDeletesFromSource = true;
-	private Map<String, String> jdbcConnectionDetailMap = null;
-
-
+	private transient Map<String, String> jdbcConnectionDetailMap = null;
+	
     @Override
     public void setIgnoreResourceNotFound(boolean setting) {
         ignoreResourceNotFound = setting;
@@ -86,15 +86,17 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 
     @Override
     public void setLocation(Resource location) {
-    	ConcurrentCompositeConfiguration concurrentCompositeConfiguration = null;
+    	ConcurrentCompositeConfiguration conComConfiguration = null;
     	try {
 			if (jdbcConnectionDetailMap == null) {
 				propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
 				super.setLocation(location);
 			} else {
-				concurrentCompositeConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location,
-								initialDelayMillis, delayMillis, ignoreDeletesFromSource, jdbcConnectionDetailMap);
-				super.setProperties(ConfigurationConverter.getProperties(concurrentCompositeConfiguration));
+				
+				Map<String, String> defaultParameterMap =getDefaultParamMap();
+				conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location,
+						defaultParameterMap, jdbcConnectionDetailMap);
+				super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
 			}
 		} catch (Exception ex) {
 			LOGGER.error("Problem setting the location.", ex);
@@ -104,16 +106,16 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 
     @Override
     public void setLocations(Resource[] locations) {
-		ConcurrentCompositeConfiguration concurrentCompositeConfiguration = null;
+		ConcurrentCompositeConfiguration conComConfiguration = null;
 		try {
 			if (jdbcConnectionDetailMap == null) {
 				propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis,
 						delayMillis, ignoreDeletesFromSource);
 				super.setLocations(locations);
 			} else {
-				propertyPlaceholderSupport.setMixResourcesAsPropertySource(	locations, ignoreResourceNotFound, initialDelayMillis,
-						delayMillis, ignoreDeletesFromSource, jdbcConnectionDetailMap);
-				super.setProperties(ConfigurationConverter.getProperties(concurrentCompositeConfiguration));
+				Map<String, String> defaultParameterMap =getDefaultParamMap();
+				propertyPlaceholderSupport.setMixResourcesAsPropertySource(	locations, defaultParameterMap, jdbcConnectionDetailMap);
+				super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
 			}
 		} catch (Exception ex) {
 			LOGGER.error("Problem setting the locations", ex);
@@ -121,7 +123,7 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 		}
     }
     
-	public void setJdbcConnectionDetail(String jdbcConnectionDetail) throws Exception {
+	public void setJdbcConnectionDetail(String jdbcConnectionDetail) {
 		if (jdbcConnectionDetail != null) {
 			jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionDetail);
 			DynamicConfiguration configuration = propertyPlaceholderSupport
@@ -130,12 +132,12 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 		}
 	}
 
-	public void setJdbcConnectionLocation(String jdbcConnectionLocation) throws Exception{
+	public void setJdbcConnectionLocation(String jdbcConnectionLocation){
 		if (jdbcConnectionLocation != null) {
 			jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionLocation);
 		}
 	}
-	private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) throws Exception {
+	private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
 		Map<String, String> jdbcMap = new HashMap<>();
 
 		String delims = "[|][|]";
@@ -143,17 +145,21 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 		if(jdbcUri==null){
 			LOGGER.info("Argument passed Cant be null. ");
 			LOGGER.error("The argument passes is not correct");
-			LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||keyColumnName#<property_key>||valueColumnName#<property_value>");
-			throw new Exception("Parameter passed are not valid. See the Error log for more detail");
+			LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+					+ "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+					+ "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+					+ "keyColumnName#<property_key>||valueColumnName#<property_value>");
 		}
 		
 		String[] tokens = jdbcUri.split(delims);
 		
-		if (tokens.length != 7) {
+		if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
 			LOGGER.info("Argument passed : " + jdbcUri);
 			LOGGER.error("The argument passes is not correct");
-			LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||keyColumnName#<property_key>||valueColumnName#<property_value>");
-			throw new Exception("Parameter passed are not valid. See the Error log for more detail");
+			LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+					+ "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+					+ "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+					+ "keyColumnName#<property_key>||valueColumnName#<property_value>");
 		} else {
 			delims = "[#]";
 			for (String keyValue : tokens) {
@@ -162,5 +168,15 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 			}
 		}
 		return jdbcMap;
+	}
+	
+	private Map<String, String> getDefaultParamMap() {
+		Map<String, String> defaultParameterMap=new HashMap<>();
+		defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
+		defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
+		defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeletesFromSource));
+		defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
+		return defaultParameterMap;
+		
 	}
 }
