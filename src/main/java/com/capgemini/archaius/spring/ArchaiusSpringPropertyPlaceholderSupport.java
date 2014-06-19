@@ -39,13 +39,13 @@ import java.util.Properties;
  */
 class ArchaiusSpringPropertyPlaceholderSupport {
 	
-	private String dbURL;
-	private String driverClassName;
-	private String username; 
-	private String password;
-	private String sqlQuerry;
-	private String keyColumnName;
-	private String valueColumnName;
+	private transient String dbURL;
+	private transient String driverClassName;
+	private transient String username; 
+	private transient String password;
+	private transient String sqlQuerry;
+	private transient String keyColumnName;
+	private transient String valueColumnName;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusSpringPropertyPlaceholderSupport.class);
     
@@ -101,11 +101,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     }
     
 	public DynamicConfiguration setJdbcResourceAsPropetiesSource(Map<String, String> jdbcConnectionDetailMap,
-			 int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource) throws Exception {
+			 int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource) {
 		
 		if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
 			LOGGER.error("There was already a config source (or sources) configured.");
-			throw new Exception(
+			throw new IllegalStateException(
 					"Archaius is already configured with a property source/sources.");
 		}
 
@@ -126,26 +126,29 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 	}
 
 	protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(Resource[] locations,
-			boolean ignoreResourceNotFound, int initialDelayMillis,
-			int delayMillis, boolean ignoreDeletesFromSource,
-			Map<String, String> jdbcConnectionDetailMap) throws Exception {
+			Map<String, String> defaultParameterMap, Map<String, String> jdbcConnectionDetailMap) throws IOException{
+		
+		int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+		int delayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
+		boolean ignoreDeletesFromSource = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+		boolean ignoreResourceNotFound = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
 		if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
 			LOGGER.error("There was already a config source (or sources) configured.");
-			throw new Exception(
+			throw new IllegalStateException(
 					"Archaius is already configured with a property source/sources.");
 		}
 		
 		// adding file or classpath properties to the Archaius 
-		ConcurrentCompositeConfiguration concurrentCompositeConfiguration = new ConcurrentCompositeConfiguration();
+		ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 		for (int i = locations.length - 1; i >= 0; i--) {
 			try {
 				final String locationURL = locations[i].getURL().toString();
-				concurrentCompositeConfiguration.addConfiguration(new DynamicURLConfiguration(
+				conComConfiguration.addConfiguration(new DynamicURLConfiguration(
 						initialDelayMillis, delayMillis,
 						ignoreDeletesFromSource, locationURL));
 			} catch (Exception ex) {
-				if (ignoreResourceNotFound != true) {
+				if (!ignoreResourceNotFound) {
 					LOGGER.error(
 							"Exception thrown when adding a configuration location.",
 							ex);
@@ -165,31 +168,34 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 		
 		DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
 		
-		concurrentCompositeConfiguration.addConfiguration(dynamicConfiguration);
+		conComConfiguration.addConfiguration(dynamicConfiguration);
 		
-		DynamicPropertyFactory.initWithConfigurationSource(concurrentCompositeConfiguration);
+		DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 		
-		return concurrentCompositeConfiguration;
+		return conComConfiguration;
 	}
 	
 	protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(Resource location,
-			int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource,
-			Map<String, String> jdbcConnectionDetailMap) throws Exception {
-
+			Map<String, String> defaultParameterMap, Map<String, String> jdbcConnectionDetailMap) throws IOException {
+		
+		final String locationURL = location.getURL().toString();
+		int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+		int delayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
+		boolean ignoreDeletesFromSource = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+		
+		
 		if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
 			LOGGER.error("There was already a config source (or sources) configured.");
-			throw new Exception(
+			throw new IllegalStateException(
 					"Archaius is already configured with a property source/sources.");
 		}
 		
-		ConcurrentCompositeConfiguration concurrentCompositeConfiguration = new ConcurrentCompositeConfiguration();
+		ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 		
 		// adding file or classpath properties to the Archaius 
-		final String locationURL = location.getURL().toString();
-		
 		final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
 		
-		concurrentCompositeConfiguration.addConfiguration(urlConfiguration);
+		conComConfiguration.addConfiguration(urlConfiguration);
 		
 		//adding database tables to the Archaius  
 		setJdbcConfigurationParameter(jdbcConnectionDetailMap);
@@ -202,12 +208,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 		
 		DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
 		
-		concurrentCompositeConfiguration.addConfiguration(dynamicConfiguration);
+		conComConfiguration.addConfiguration(dynamicConfiguration);
 		
 
-		DynamicPropertyFactory.initWithConfigurationSource(concurrentCompositeConfiguration);
+		DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 		
-		return concurrentCompositeConfiguration;
+		return conComConfiguration;
 	}
 
 	private void setJdbcConfigurationParameter(Map<String,String> jdbcConnectionDetailMap){
