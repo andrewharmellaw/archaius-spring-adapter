@@ -139,7 +139,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 					"Archaius is already configured with a property source/sources.");
 		}
 		
-		//TODO add documention for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
+		//TODO add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
 		ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 		//adding database tables to the Archaius  
 		setJdbcConfigurationParameter(jdbcConnectionDetailMap);
