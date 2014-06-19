@@ -50,14 +50,24 @@ public class ArchaiusOverLoadingOfPropertyResourceTest {
 	private final String expectedArchaiusPropertyValueOne = "Bad Request";
 
 	private final String propertyArchaiusKeyTwo = "Error404";
-	private final String expectedArchaiusPropertyValueTwo = "Page not found from Property file";
+	private final String expectedArchaiusPropertyValueTwo = "Page not found";
 
 	private final String propertyArchaiusKeyThree = "Error500";
 	private final String expectedArchaiusPropertyValueThree = "Internal Server Error";
+	
+	private final String propertyArchaiusKeyFour = "Error405";
+	private final String expectedArchaiusPropertyValueFour = "Method Not Allowed from Property file";
+
+	private final String propertyArchaiusKeyFive = "Error407";
+	private final String expectedArchaiusPropertyValueFive = "Proxy Authentication Required from Property file";
+
+	private final String propertyArchaiusKeySix = "Error413";
+	private final String expectedArchaiusPropertyValueSix = "Request Entity Too Large from Property file";
 
 	@Test
 	public void propertiesAreLoadedFromDatabaseAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
 
+		// value of Error is loaded from Database and overriding the value read from properties file.
 		DynamicStringProperty prop1 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyOne, propertyArchaiusKeyOne);
 
 		assertThat(prop1.get(), is(equalTo(expectedArchaiusPropertyValueOne)));
@@ -66,10 +76,22 @@ public class ArchaiusOverLoadingOfPropertyResourceTest {
 
 		assertThat(prop3.get(), is(equalTo(expectedArchaiusPropertyValueThree)));
 		
-		// value of Error404 is loaded from property file and overriding the value read from jdbc.
 		DynamicStringProperty prop2 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyTwo, propertyArchaiusKeyTwo);
 
 		assertThat(prop2.get(), is(equalTo(expectedArchaiusPropertyValueTwo)));
+		
+		// value of Errorcode is loaded from properties file as the same is not available in DB.
+		DynamicStringProperty prop4 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyFour, propertyArchaiusKeyFour);
+
+		assertThat(prop4.get(), is(equalTo(expectedArchaiusPropertyValueFour)));
+		
+		DynamicStringProperty prop5 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyFive, propertyArchaiusKeyFive);
+
+		assertThat(prop5.get(), is(equalTo(expectedArchaiusPropertyValueFive)));
+		
+		DynamicStringProperty prop6 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeySix, propertyArchaiusKeySix);
+
+		assertThat(prop6.get(), is(equalTo(expectedArchaiusPropertyValueSix)));
 		
 		//resetting the data to initial value
 		ResetTestDataForArchaiusTest resetData=new ResetTestDataForArchaiusTest();

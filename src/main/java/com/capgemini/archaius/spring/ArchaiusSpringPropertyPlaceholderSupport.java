@@ -139,8 +139,22 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 					"Archaius is already configured with a property source/sources.");
 		}
 		
-		// adding file or classpath properties to the Archaius 
+		//TODO add documention for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
 		ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
+		//adding database tables to the Archaius  
+		setJdbcConfigurationParameter(jdbcConnectionDetailMap);
+				
+		DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password); 
+
+		JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
+				
+		FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis,delayMillis,ignoreDeletesFromSource);
+				
+		DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+				
+		conComConfiguration.addConfiguration(dynamicConfiguration);
+				
+		// adding file or classpath properties to the Archaius 
 		for (int i = locations.length - 1; i >= 0; i--) {
 			try {
 				final String locationURL = locations[i].getURL().toString();
@@ -156,19 +170,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 				}
 			}
 		}
-		
-		//adding database tables to the Archaius  
-		setJdbcConfigurationParameter(jdbcConnectionDetailMap);
-		
-		DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password); 
-
-		JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
-		
-		FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis,delayMillis,ignoreDeletesFromSource);
-		
-		DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-		
-		conComConfiguration.addConfiguration(dynamicConfiguration);
 		
 		DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 		
@@ -192,23 +193,23 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 		
 		ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 		
+		//adding database tables to the Archaius  
+		setJdbcConfigurationParameter(jdbcConnectionDetailMap);
+				
+		DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password); 
+
+		JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
+			
+		FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis,delayMillis,ignoreDeletesFromSource);
+				
+		DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+				
+		conComConfiguration.addConfiguration(dynamicConfiguration);
+		
 		// adding file or classpath properties to the Archaius 
 		final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
 		
 		conComConfiguration.addConfiguration(urlConfiguration);
-		
-		//adding database tables to the Archaius  
-		setJdbcConfigurationParameter(jdbcConnectionDetailMap);
-		
-		DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password); 
-
-		JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
-	
-		FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis,delayMillis,ignoreDeletesFromSource);
-		
-		DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-		
-		conComConfiguration.addConfiguration(dynamicConfiguration);
 		
 
 		DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
