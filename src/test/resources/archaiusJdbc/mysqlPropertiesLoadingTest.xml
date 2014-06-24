@@ -12,11 +12,9 @@
         <property name="initialDelayMillis" value="1" />
         <property name="delayMillis" value="10" />
         <property name="ignoreDeletesFromSource" value="false" />
-		<property name="jdbcConnectionLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value" />
-		<property name="location" value="classpath:properties/archaiusSystem.properties" />
-	
+		<property name="jdbcConnectionDetail" value="driverClassName#com.mysql.jdbc.Driver||dbURL#jdbc:mysql://localhost:3306/rmg||username#admin||password#nimda||sqlQuerry#select distinct error_code, error_value from error_messages||keyColumnName#error_code||valueColumnName#error_value"  />
 	</bean>
-
+	
 	<camel:camelContext id="camel" />
 
 </beans>

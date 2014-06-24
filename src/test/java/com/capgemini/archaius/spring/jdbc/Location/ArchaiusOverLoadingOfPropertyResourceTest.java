@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import com.capgemini.archaius.spring.jdbc.JdbcTestSuper;
 import com.capgemini.archaius.spring.jdbc.dataload.DeleteTestDataAndSchemaForArchaiusTest;
 import com.capgemini.archaius.spring.jdbc.dataload.ResetTestDataForArchaiusTest;
 import com.netflix.config.DynamicPropertyFactory;
@@ -40,7 +41,7 @@ import com.netflix.config.DynamicStringProperty;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:archaiusJdbc/archaiusPropertiesOverLoadingTest.xml" })
 @ActiveProfiles("default")
-public class ArchaiusOverLoadingOfPropertyResourceTest {
+public class ArchaiusOverLoadingOfPropertyResourceTest extends JdbcTestSuper {
 
 	@Autowired
 	@Qualifier("camel")

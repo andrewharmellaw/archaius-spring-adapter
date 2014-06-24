@@ -12,12 +12,12 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MainClassToRunBeforeRunningArchaiusTest {
+public class LoadInitialArchaiusPropertyData {
 
 	/* the default framework is embedded */
 	private String driver = "org.apache.derby.jdbc.EmbeddedDriver";
 	private String protocol = "jdbc:derby:memory:";
-	public Logger LOGGER = LoggerFactory.getLogger(MainClassToRunBeforeRunningArchaiusTest.class);
+	public Logger LOGGER = LoggerFactory.getLogger(LoadInitialArchaiusPropertyData.class);
 	
 	public void initializedDerby() {
 

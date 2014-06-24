@@ -33,6 +33,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import com.capgemini.archaius.spring.jdbc.JdbcTestSuper;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 
@@ -43,7 +44,7 @@ import com.netflix.config.DynamicStringProperty;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:archaiusJdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class CamelPropertiesLoadingFromDBandPropertyResourceTest {
+public class CamelPropertiesLoadingFromDBandPropertyResourceTest extends JdbcTestSuper {
 
     private final String propertyKey = "var2";
     private final String nonExistentPropertyKey = "bad_key";

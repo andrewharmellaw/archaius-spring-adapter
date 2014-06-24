@@ -25,6 +25,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.capgemini.archaius.spring.jdbc.JdbcTestSuper;
+
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -38,7 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:archaiusJdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class SpringPropertiesLoadingFromDBAndPropertyResourceTest {
+public class SpringPropertiesLoadingFromDBAndPropertyResourceTest extends JdbcTestSuper{
     
     private final String propertyKey = "var2";
     private final String expectedPropertyValue = "MY SECOND VAR";

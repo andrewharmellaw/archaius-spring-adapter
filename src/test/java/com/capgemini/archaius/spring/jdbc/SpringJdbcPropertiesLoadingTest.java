@@ -21,8 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,7 +35,7 @@ import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml" })
 @ActiveProfiles("default")
-public class SpringJdbcPropertiesLoadingTest {
+public class SpringJdbcPropertiesLoadingTest  extends JdbcTestSuper{
 
     private final String propertySpringKey = "Error404";
     private final String expectedSpringropertyValue = "Page not found";

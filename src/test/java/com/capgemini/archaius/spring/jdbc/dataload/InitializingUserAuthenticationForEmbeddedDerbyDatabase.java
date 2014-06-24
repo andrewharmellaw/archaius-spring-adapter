@@ -64,7 +64,6 @@ public class InitializingUserAuthenticationForEmbeddedDerbyDatabase {
 			System.gc();
 		} catch (Throwable e) {
 			errorPrint(e);
-			System.exit(1);
 		}
 	}
 

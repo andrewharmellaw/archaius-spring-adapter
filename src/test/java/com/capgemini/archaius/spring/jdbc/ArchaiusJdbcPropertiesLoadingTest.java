@@ -43,7 +43,7 @@ import com.netflix.config.DynamicStringProperty;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml" })
 @ActiveProfiles("default")
-public class ArchaiusJdbcPropertiesLoadingTest {
+public class ArchaiusJdbcPropertiesLoadingTest extends JdbcTestSuper{
 
 	@Autowired
 	@Qualifier("camel")
@@ -68,8 +68,6 @@ public class ArchaiusJdbcPropertiesLoadingTest {
 	private final String newExpectedArchaiusPropertyValueThree = "New Internal Server Error";
 	
 	public Logger LOGGER = LoggerFactory.getLogger(ArchaiusJdbcPropertiesLoadingTest.class);
-	
-	
 	
 	@Test
 	public void propertiesAreLoadedFromDatabaseAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
