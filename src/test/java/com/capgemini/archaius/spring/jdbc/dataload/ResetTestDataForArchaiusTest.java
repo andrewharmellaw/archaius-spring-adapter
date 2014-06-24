@@ -80,12 +80,6 @@ public class ResetTestDataForArchaiusTest {
             psUpdate.setString(3, "Error404");
             psUpdate.executeUpdate();
             LOGGER.info("Updated Error404");
-
-            psUpdate.setString(1, "Error400");
-            psUpdate.setString(2, "Bad Request");
-            psUpdate.setString(3, "Error400");
-            psUpdate.executeUpdate();
-            LOGGER.info("Updated Error400");
             
             conn.commit();
 			

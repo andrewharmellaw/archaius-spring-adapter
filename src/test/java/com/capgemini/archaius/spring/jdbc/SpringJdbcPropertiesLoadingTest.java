@@ -25,43 +25,35 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.capgemini.archaius.spring.jdbc.dataload.DeleteTestDataAndSchemaForArchaiusTest;
-import com.capgemini.archaius.spring.jdbc.dataload.ResetTestDataForArchaiusTest;
 import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest;
+
 /**
- * 
+ *
  * @author Sanjay Kumar
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml" })
+@ContextConfiguration(locations = {"classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class SpringJdbcPropertiesLoadingTest  extends JdbcTestSuper{
+public class SpringJdbcPropertiesLoadingTest extends JdbcTestSuper {
 
     private final String propertySpringKey = "Error404";
     private final String expectedSpringropertyValue = "Page not found";
-    @Value("${" + propertySpringKey + "}") private String propertyValue;
-   
+    @Value("${" + propertySpringKey + "}")
+    private String propertyValue;
+
     @Test
     public void propertiesAreLoadedFromDatabaseAndAccessedViaTheSpringValueAnnotation() throws InterruptedException {
-    	
+
         //property loaded at startup.
-    	assertThat(propertyValue, equalTo(expectedSpringropertyValue));
-        
-    	// when updating the data in DB
-     	UpdateTestDataForArchaiusTest updateTestData=new UpdateTestDataForArchaiusTest();
-     	updateTestData.initializedDerby();
-        	
-     	//then  still spring context will have old data not the new values
-     	assertThat(propertyValue, equalTo(expectedSpringropertyValue));
-     	
-    	//resetting the data to initial value
-		ResetTestDataForArchaiusTest resetData=new ResetTestDataForArchaiusTest();
-		resetData.initializedDerby();
-		Thread.sleep(100);
-		
-     	//shutting down the in memory database.
-     	DeleteTestDataAndSchemaForArchaiusTest deleteDB= new DeleteTestDataAndSchemaForArchaiusTest();
-		deleteDB.deleteDatabase();
+        assertThat(propertyValue, equalTo(expectedSpringropertyValue));
+
+        // when updating the data in DB
+        UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
+        updateTestData.initializedDerby();
+
+        //then  still spring context will have old data not the new values
+        assertThat(propertyValue, equalTo(expectedSpringropertyValue));
+    
     }
     
 }

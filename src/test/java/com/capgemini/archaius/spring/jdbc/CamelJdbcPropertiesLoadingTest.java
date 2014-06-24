@@ -47,17 +47,11 @@ public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
     @Qualifier("camel")
     protected CamelContext context;
 
-    private final String propertyArchaiusKeyOne = "Error400";
-    private final String expectedArchaiusPropertyValueOne = "Bad Request";
-
     private final String propertyArchaiusKeyTwo = "Error404";
     private final String expectedArchaiusPropertyValueTwo = "Page not found";
 
     private final String propertyArchaiusKeyThree = "Error500";
     private final String expectedArchaiusPropertyValueThree = "Internal Server Error";
-
-    private final String newArchaiusPropertyKeyOne = "Error400";
-    private final String newExpectedArchaiusPropertyValueOne = "New Bad Request";
 
     private final String newArchaiusPropertyKeyTwo = "Error404";
     private final String newExpectedArchaiusPropertyValueTwo = "New Page not found";
@@ -69,12 +63,8 @@ public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
     @Test
     public void propertiesAreLoadedFromDatabaseAndAccessedViaCamelValueAnnotation() throws Exception {
         //data loded from the DB using Archaius
-        String camelPropertyValueOne = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKeyOne + "}}");
         String camelPropertyValueTwo = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKeyTwo + "}}");
         String camelPropertyValueThree = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKeyThree + "}}");
-
-        assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValueOne, is(equalTo(expectedArchaiusPropertyValueOne)));
 
         assertThat("The context cannot be null.", context != null);
         assertThat(camelPropertyValueTwo, is(equalTo(expectedArchaiusPropertyValueTwo)));
@@ -88,13 +78,8 @@ public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
         Thread.sleep(100);
 
         //then  still camel context will have old data not the new values
-        camelPropertyValueOne = context.resolvePropertyPlaceholders("{{" + newArchaiusPropertyKeyOne + "}}");
         camelPropertyValueTwo = context.resolvePropertyPlaceholders("{{" + newArchaiusPropertyKeyTwo + "}}");
         camelPropertyValueThree = context.resolvePropertyPlaceholders("{{" + newArchaiusPropertyKeyThree + "}}");
-
-        assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValueOne, is(equalTo(expectedArchaiusPropertyValueOne)));
-        assertThat(camelPropertyValueOne, is(not(newExpectedArchaiusPropertyValueOne)));
 
         assertThat("The context cannot be null.", context != null);
         assertThat(camelPropertyValueTwo, is(equalTo(expectedArchaiusPropertyValueTwo)));
@@ -103,14 +88,6 @@ public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
         assertThat("The context cannot be null.", context != null);
         assertThat(camelPropertyValueThree, is(equalTo(expectedArchaiusPropertyValueThree)));
         assertThat(camelPropertyValueThree, is(not(newExpectedArchaiusPropertyValueThree)));
-
-        //resetting the data to initial value
-        ResetTestDataForArchaiusTest resetData = new ResetTestDataForArchaiusTest();
-        resetData.initializedDerby();
-        Thread.sleep(100);
-
-        //shutting down the in memory database.
-        DeleteTestDataAndSchemaForArchaiusTest deleteDB = new DeleteTestDataAndSchemaForArchaiusTest();
-        deleteDB.deleteDatabase();
+    
     }
 }

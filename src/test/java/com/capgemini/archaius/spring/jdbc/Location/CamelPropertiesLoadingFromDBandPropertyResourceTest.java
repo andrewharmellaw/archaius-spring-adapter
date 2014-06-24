@@ -24,8 +24,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,8 +47,8 @@ public class CamelPropertiesLoadingFromDBandPropertyResourceTest extends JdbcTes
     private final String propertyKey = "var2";
     private final String nonExistentPropertyKey = "bad_key";
     private final String expectedPropertyValue = "MY SECOND VAR";
-    private final String propertyArchaiusKey = "Error400";
-    private final String expectedArchaiusPropertyValue = "Bad Request";
+    private final String propertyArchaiusKey = "Error404";
+    private final String expectedArchaiusPropertyValue = "Page not found";
     
     @Autowired
     @Qualifier("camel")

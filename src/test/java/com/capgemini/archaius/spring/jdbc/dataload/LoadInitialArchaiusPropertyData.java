@@ -68,11 +68,6 @@ public class LoadInitialArchaiusPropertyData {
 			psInsert.executeUpdate();
 			LOGGER.info("Inserted Error500");
 			
-			psInsert.setString(1, "Error400");
-			psInsert.setString(2, "Bad Request");
-			psInsert.executeUpdate();
-			LOGGER.info("Inserted Error400");
-			
 			/*
 			 * We select the rows and verify the results.
 			 */
