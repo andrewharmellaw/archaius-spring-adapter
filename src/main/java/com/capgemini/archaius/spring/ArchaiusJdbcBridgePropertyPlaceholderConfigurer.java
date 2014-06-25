@@ -23,7 +23,6 @@ import org.springframework.core.io.Resource;
 
 import com.capgemini.archaius.spring.util.JdbcContants;
 import com.netflix.config.ConcurrentCompositeConfiguration;
-import com.netflix.config.DynamicConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +30,7 @@ import java.util.Properties;
 
 /**
  *
- * @author Andrew Harmel-Law
+ * @author Sanjay Kumar
  */
 public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePropertyPlaceholderConfigurer {
 
@@ -44,8 +43,8 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
             = new ArchaiusSpringPropertyPlaceholderSupport();
     private transient boolean ignoreResourceNotFound = true;
     private transient boolean ignoreDeletesFromSource = true;
-	private transient Map<String, String> jdbcConnectionDetailMap = null;
-	
+    private transient Map<String, String> jdbcConnectionDetailMap = null;
+
     @Override
     public void setIgnoreResourceNotFound(boolean setting) {
         ignoreResourceNotFound = setting;
@@ -53,7 +52,8 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
     }
 
     /**
-     * The initial delay before the property values are re-read from the location, in milliseconds
+     * The initial delay before the property values are re-read from the
+     * location, in milliseconds
      *
      * @param initialDelayMillis
      */
@@ -62,7 +62,8 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
     }
 
     /**
-     * Set the delay for the property values to re-read from the location, in milliseconds
+     * Set the delay for the property values to re-read from the location, in
+     * milliseconds
      *
      * @param delayMillis
      */
@@ -71,7 +72,8 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
     }
 
     /**
-     * Should the dynamic property loader ignore deletes from the location source.
+     * Should the dynamic property loader ignore deletes from the location
+     * source.
      *
      * @param ignoreDeletesFromSource
      */
@@ -86,97 +88,98 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
 
     @Override
     public void setLocation(Resource location) {
-    	ConcurrentCompositeConfiguration conComConfiguration = null;
-    	try {
-			if (jdbcConnectionDetailMap == null) {
-				propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-				super.setLocation(location);
-			} else {
-				
-				Map<String, String> defaultParameterMap =getDefaultParamMap();
-				conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location,
-						defaultParameterMap, jdbcConnectionDetailMap);
-				super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
-			}
-		} catch (Exception ex) {
-			LOGGER.error("Problem setting the location.", ex);
-			throw new RuntimeException("Problem setting the location.", ex);
-		}
+        ConcurrentCompositeConfiguration conComConfiguration = null;
+        try {
+            if (jdbcConnectionDetailMap == null) {
+                propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                super.setLocation(location);
+            } else {
+
+                Map<String, String> defaultParameterMap = getDefaultParamMap();
+                conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location,
+                        defaultParameterMap, jdbcConnectionDetailMap);
+                super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Problem setting the location.", ex);
+            throw new RuntimeException("Problem setting the location.", ex);
+        }
     }
 
     @Override
     public void setLocations(Resource[] locations) {
-		ConcurrentCompositeConfiguration conComConfiguration = null;
-		try {
-			if (jdbcConnectionDetailMap == null) {
-				propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis,
-						delayMillis, ignoreDeletesFromSource);
-				super.setLocations(locations);
-			} else {
-				Map<String, String> defaultParameterMap =getDefaultParamMap();
-				propertyPlaceholderSupport.setMixResourcesAsPropertySource(	locations, defaultParameterMap, jdbcConnectionDetailMap);
-				super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
-			}
-		} catch (Exception ex) {
-			LOGGER.error("Problem setting the locations", ex);
-			throw new RuntimeException("Problem setting the locations.", ex);
-		}
+        ConcurrentCompositeConfiguration conComConfiguration = null;
+        try {
+            if (jdbcConnectionDetailMap == null) {
+                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis,
+                        delayMillis, ignoreDeletesFromSource);
+                super.setLocations(locations);
+            } else {
+                Map<String, String> defaultParameterMap = getDefaultParamMap();
+                propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
+                super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Problem setting the locations", ex);
+            throw new RuntimeException("Problem setting the locations.", ex);
+        }
     }
-    
-	public void setJdbcConnectionDetail(String jdbcConnectionDetail) {
-		if (jdbcConnectionDetail != null) {
-			jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionDetail);
-			DynamicConfiguration configuration = propertyPlaceholderSupport
-					.setJdbcResourceAsPropetiesSource(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-			super.setProperties(ConfigurationConverter.getProperties(configuration));
-		}
-	}
 
-	public void setJdbcConnectionLocation(String jdbcConnectionLocation){
-		if (jdbcConnectionLocation != null) {
-			jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionLocation);
-		}
-	}
-	private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
-		Map<String, String> jdbcMap = new HashMap<>();
+//    public void setJdbcConnectionDetail(String jdbcConnectionDetail) {
+//        if (jdbcConnectionDetail != null) {
+//            jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionDetail);
+//            DynamicConfiguration configuration = propertyPlaceholderSupport
+//                    .setJdbcResourceAsArchaiusPropetiesSource(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+//            super.setProperties(ConfigurationConverter.getProperties(configuration));
+//        }
+//    }
 
-		String delims = "[|][|]";
-		
-		if(jdbcUri==null){
-			LOGGER.info("Argument passed Cant be null. ");
-			LOGGER.error("The argument passes is not correct");
-			LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
-					+ "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-					+ "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
-					+ "keyColumnName#<property_key>||valueColumnName#<property_value>");
-		}
-		
-		String[] tokens = jdbcUri.split(delims);
-		
-		if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
-			LOGGER.info("Argument passed : " + jdbcUri);
-			LOGGER.error("The argument passes is not correct");
-			LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
-					+ "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-					+ "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
-					+ "keyColumnName#<property_key>||valueColumnName#<property_value>");
-		} else {
-			delims = "[#]";
-			for (String keyValue : tokens) {
-				String[] keyAndValue = keyValue.split(delims);
-				jdbcMap.put(keyAndValue[0], keyAndValue[1]);
-			}
-		}
-		return jdbcMap;
-	}
-	
-	private Map<String, String> getDefaultParamMap() {
-		Map<String, String> defaultParameterMap=new HashMap<>();
-		defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
-		defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
-		defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeletesFromSource));
-		defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
-		return defaultParameterMap;
-		
-	}
+    public void setJdbcConnectionLocation(String jdbcConnectionLocation) {
+        if (jdbcConnectionLocation != null) {
+            jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionLocation);
+        }
+    }
+
+    private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
+        Map<String, String> jdbcMap = new HashMap<>();
+
+        String delims = "[|][|]";
+
+        if (jdbcUri == null) {
+            LOGGER.info("Argument passed Cant be null. ");
+            LOGGER.error("The argument passes is not correct");
+            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
+        }
+
+        String[] tokens = jdbcUri.split(delims);
+
+        if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
+            LOGGER.info("Argument passed : " + jdbcUri);
+            LOGGER.error("The argument passes is not correct");
+            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
+        } else {
+            delims = "[#]";
+            for (String keyValue : tokens) {
+                String[] keyAndValue = keyValue.split(delims);
+                jdbcMap.put(keyAndValue[0], keyAndValue[1]);
+            }
+        }
+        return jdbcMap;
+    }
+
+    private Map<String, String> getDefaultParamMap() {
+        Map<String, String> defaultParameterMap = new HashMap<>();
+        defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
+        defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
+        defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeletesFromSource));
+        defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
+        return defaultParameterMap;
+
+    }
 }
