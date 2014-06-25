@@ -40,7 +40,7 @@ import com.netflix.config.DynamicStringProperty;
  * @author skumar81
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/camelPropertiesLoadingFromDBandPropertyResourceTest.xml"})
+@ContextConfiguration(locations = {"classpath:camel/jdbc/camelPropertiesLoadingFromDBandPropertyResourceTest.xml"})
 @ActiveProfiles("default")
 public class CamelPropertiesLoadingFromDBandPropertyResourceTest extends JdbcTestSuper {
 

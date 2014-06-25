@@ -38,7 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author skumar81
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/springPropertiesLoadingFromDBAndPropertyResourceTest.xml"})
+@ContextConfiguration(locations = {"classpath:spring/jdbc/springPropertiesLoadingFromDBAndPropertyResourceTest.xml"})
 @ActiveProfiles("default")
 public class SpringPropertiesLoadingFromDBAndPropertyResourceTest extends JdbcTestSuper{
     

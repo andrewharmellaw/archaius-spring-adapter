@@ -37,7 +37,7 @@ import static org.hamcrest.CoreMatchers.not;
  * @author Sanjay Kumar
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/camelJdbcPropertiesLoadingTest.xml"})
+@ContextConfiguration(locations = {"classpath:camel/jdbc/camelJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
 
