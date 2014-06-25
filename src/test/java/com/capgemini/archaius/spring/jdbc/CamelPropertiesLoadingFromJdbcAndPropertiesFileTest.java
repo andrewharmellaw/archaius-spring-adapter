@@ -15,6 +15,7 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
@@ -41,7 +42,7 @@ import static org.junit.Assert.fail;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:camel/jdbc/camelPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
 @ActiveProfiles("default")
-public class CamelPropertiesLoadingFromJdbcAndPropertiesFileTest extends ArchaiusJdbcTest {
+public class CamelPropertiesLoadingFromJdbcAndPropertiesFileTest extends AbstractArchaiusJdbcTest {
 
     private final String propertyArchaiusKey = "var2";
     private final String nonExistentPropertyKey = "bad_key";

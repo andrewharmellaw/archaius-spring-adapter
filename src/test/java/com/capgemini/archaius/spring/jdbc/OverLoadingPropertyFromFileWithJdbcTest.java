@@ -15,6 +15,7 @@ package com.capgemini.archaius.spring.jdbc;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/overLoadingPropertyFromFileWithJdbcTest.xml"})
 @ActiveProfiles("default")
-public class OverLoadingPropertyFromFileWithJdbcTest extends ArchaiusJdbcTest {
+public class OverLoadingPropertyFromFileWithJdbcTest extends AbstractArchaiusJdbcTest {
 
     private final String overloadedPropertyArchaiusKey = "Error404";
     private final String expectedOverloadedArchaiusPropertyValue = "Page not found";

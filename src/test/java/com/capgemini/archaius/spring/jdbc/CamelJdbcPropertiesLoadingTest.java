@@ -15,6 +15,7 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest;
+import com.capgemini.archaius.spring.jdbc.derby.ArchaiusPropertyDataUpdater;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,7 +40,7 @@ import static org.hamcrest.CoreMatchers.not;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:camel/jdbc/camelJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class CamelJdbcPropertiesLoadingTest extends ArchaiusJdbcTest {
+public class CamelJdbcPropertiesLoadingTest extends AbstractArchaiusJdbcTest {
 
     @Autowired
     @Qualifier("camel")
@@ -61,8 +62,8 @@ public class CamelJdbcPropertiesLoadingTest extends ArchaiusJdbcTest {
         assertThat(camelPropertyValueTwo, is(equalTo(originalExpectedArchaiusPropertyValue)));
         
         // When property is then changed in the DB
-        UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
-        updateTestData.initializedDerby();
+        ArchaiusPropertyDataUpdater updateTestData = new ArchaiusPropertyDataUpdater();
+        updateTestData.updatePropertyData();
         Thread.sleep(100);
 
         // Then

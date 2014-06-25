@@ -15,6 +15,7 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest;
+import com.capgemini.archaius.spring.jdbc.derby.ArchaiusPropertyDataUpdater;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 
@@ -38,7 +39,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class ArchaiusJdbcPropertiesLoadingTest extends ArchaiusJdbcTest {
+public class ArchaiusJdbcPropertiesLoadingTest extends AbstractArchaiusJdbcTest {
 
     private final String propertyArchaiusKey = "Error404";
     private final String originalExpectedArchaiusPropertyValue = "Page not found";
@@ -59,8 +60,8 @@ public class ArchaiusJdbcPropertiesLoadingTest extends ArchaiusJdbcTest {
     public void propertiesLoadedFromTheDbWhichAreChangedInTheDbAlsoChangeInJava() throws Exception {
 
         // When
-        UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
-        updateTestData.initializedDerby();
+        ArchaiusPropertyDataUpdater updateTestData = new ArchaiusPropertyDataUpdater();
+        updateTestData.updatePropertyData();
         Thread.sleep(100);
 
         // Then
