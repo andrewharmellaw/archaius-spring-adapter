@@ -125,18 +125,9 @@ public class ArchaiusJdbcBridgePropertyPlaceholderConfigurer extends BridgePrope
         }
     }
 
-//    public void setJdbcConnectionDetail(String jdbcConnectionDetail) {
-//        if (jdbcConnectionDetail != null) {
-//            jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionDetail);
-//            DynamicConfiguration configuration = propertyPlaceholderSupport
-//                    .setJdbcResourceAsArchaiusPropetiesSource(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-//            super.setProperties(ConfigurationConverter.getProperties(configuration));
-//        }
-//    }
-
-    public void setJdbcConnectionLocation(String jdbcConnectionLocation) {
-        if (jdbcConnectionLocation != null) {
-            jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcConnectionLocation);
+    public void setjdbcLocation(String jdbcLocation) {
+        if (jdbcLocation != null) {
+            jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcLocation);
         }
     }
 
