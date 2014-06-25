@@ -15,11 +15,6 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
@@ -31,9 +26,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.capgemini.archaius.spring.jdbc.JdbcTestSuper;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -44,51 +43,38 @@ import com.netflix.config.DynamicStringProperty;
 @ActiveProfiles("default")
 public class CamelPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper {
 
-    private final String propertyKey = "var2";
+    private final String propertyArchaiusKey = "var2";
     private final String nonExistentPropertyKey = "bad_key";
-    private final String expectedPropertyValue = "MY SECOND VAR";
-    private final String propertyArchaiusKey = "Error404";
-    private final String expectedArchaiusPropertyValue = "Page not found";
-    
+    private final String expectedArchaiusPropertyValue = "MY SECOND VAR";
+
     @Autowired
     @Qualifier("camel")
     protected CamelContext context;
-    @Value("${" + propertyKey + "}") private String springPropertyValue;
-    
-    @Value("${" + propertyArchaiusKey + "}") private String springArchaiusPropertyValue;
-    
-    @Test 
-	public void propertiesAreLoadedFromDatabaseAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException{
-		
-		DynamicStringProperty prop1 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, propertyArchaiusKey);
-		
-		assertThat(prop1.get(),is(equalTo(expectedArchaiusPropertyValue)) );
-	}
-    
+
     @DirtiesContext
     @Test
     public void camelPropertiesAreLoadedFromSingleFileAndAccessedViaTheCamelValueAnnotation() throws Exception {
-    	
-        String camelPropertyValue = context.resolvePropertyPlaceholders("{{" + propertyKey + "}}");
-        
+
+        // Given
+        String camelPropertyValue = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKey + "}}");
+
+        // Then
         assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValue, is(equalTo(expectedPropertyValue)));
+        assertThat(camelPropertyValue, is(equalTo(expectedArchaiusPropertyValue)));
     }
-    
+
     @Test
-    public void springPropertiesAreAlsoLoadedOKFromSingleFileAndAccessedViaTheSpringValueAnnotation() throws InterruptedException {
-        assertThat(springPropertyValue, equalTo(expectedPropertyValue));
-        assertThat(springArchaiusPropertyValue, is(equalTo(expectedArchaiusPropertyValue)));
-    }
-    
-    @Test
-    public void nonExistentPropertiesWhenrequestedViaCamelThrowIllegalArgumentExceptions() throws InterruptedException {
+    public void nonExistentPropertiesWhenRequestedViaCamelThrowIllegalArgumentExceptions() throws InterruptedException {
+        
+        // When
         try {
             context.resolvePropertyPlaceholders("{{" + nonExistentPropertyKey + "}}");
+            
+            // Then
             fail("An IllegalArgument Exception shound be thrown");
         } catch (IllegalArgumentException ex) {
             assertThat(ex.getMessage(), is(equalTo("Property with key [" + nonExistentPropertyKey + "] not found in properties from text: {{" + nonExistentPropertyKey + "}}")));
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             fail("All other exceptions should not be thrown: " + ex.getMessage());
         }
     }

@@ -45,47 +45,31 @@ public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
     @Qualifier("camel")
     protected CamelContext context;
 
-    private final String propertyArchaiusKeyTwo = "Error404";
-    private final String expectedArchaiusPropertyValueTwo = "Page not found";
-
-    private final String propertyArchaiusKeyThree = "Error500";
-    private final String expectedArchaiusPropertyValueThree = "Internal Server Error";
-
-    private final String newArchaiusPropertyKeyTwo = "Error404";
-    private final String newExpectedArchaiusPropertyValueTwo = "New Page not found";
-
-    private final String newArchaiusPropertyKeyThree = "Error500";
-    private final String newExpectedArchaiusPropertyValueThree = "New Internal Server Error";
+    private final String propertyArchaiusKey = "Error404";
+    private final String originalExpectedArchaiusPropertyValue = "Page not found";
+    private final String newExpectedArchaiusPropertyValue = "New Page not found";
 
     @DirtiesContext
     @Test
-    public void propertiesAreLoadedFromDatabaseAndAccessedViaCamelValueAnnotation() throws Exception {
-        //data loded from the DB using Archaius
-        String camelPropertyValueTwo = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKeyTwo + "}}");
-        String camelPropertyValueThree = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKeyThree + "}}");
+    public void camelPropertiesLoadedFromTheDbWhichAreChangedInDbAtRuntimeAreNotReflectedInCamelTest() throws Exception {
+        
+        // When
+        String camelPropertyValueTwo = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKey + "}}");
 
+        // Then
         assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValueTwo, is(equalTo(expectedArchaiusPropertyValueTwo)));
-
-        assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValueThree, is(equalTo(expectedArchaiusPropertyValueThree)));
-
-        // when updating the data in DB
+        assertThat(camelPropertyValueTwo, is(equalTo(originalExpectedArchaiusPropertyValue)));
+        
+        // When property is then changed in the DB
         UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
         updateTestData.initializedDerby();
         Thread.sleep(100);
 
-        //then  still camel context will have old data not the new values
-        camelPropertyValueTwo = context.resolvePropertyPlaceholders("{{" + newArchaiusPropertyKeyTwo + "}}");
-        camelPropertyValueThree = context.resolvePropertyPlaceholders("{{" + newArchaiusPropertyKeyThree + "}}");
+        // Then
+        String camelPropertyValue = context.resolvePropertyPlaceholders("{{" + propertyArchaiusKey + "}}");
 
         assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValueTwo, is(equalTo(expectedArchaiusPropertyValueTwo)));
-        assertThat(camelPropertyValueTwo, is(not(newExpectedArchaiusPropertyValueTwo)));
-
-        assertThat("The context cannot be null.", context != null);
-        assertThat(camelPropertyValueThree, is(equalTo(expectedArchaiusPropertyValueThree)));
-        assertThat(camelPropertyValueThree, is(not(newExpectedArchaiusPropertyValueThree)));
-    
+        assertThat(camelPropertyValue, is(equalTo(originalExpectedArchaiusPropertyValue)));
+        assertThat(camelPropertyValue, is(not(newExpectedArchaiusPropertyValue)));
     }
 }

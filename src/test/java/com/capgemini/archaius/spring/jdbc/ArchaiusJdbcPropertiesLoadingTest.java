@@ -40,49 +40,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @ActiveProfiles("default")
 public class ArchaiusJdbcPropertiesLoadingTest extends JdbcTestSuper {
 
-    private final String propertyArchaiusKeyTwo = "Error404";
-    private final String expectedArchaiusPropertyValueTwo = "Page not found";
-
-    private final String propertyArchaiusKeyThree = "Error500";
-    private final String expectedArchaiusPropertyValueThree = "Internal Server Error";
-
-    private final String newArchaiusPropertyKeyTwo = "Error404";
-    private final String newExpectedArchaiusPropertyValueTwo = "New Page not found";
-
-    private final String newArchaiusPropertyKeyThree = "Error500";
-    private final String newExpectedArchaiusPropertyValueThree = "New Internal Server Error";
+    private final String propertyArchaiusKey = "Error404";
+    private final String originalExpectedArchaiusPropertyValue = "Page not found";
+    private final String newExpectedArchaiusPropertyValue = "New Page not found";
 
     public Logger LOGGER = LoggerFactory.getLogger(ArchaiusJdbcPropertiesLoadingTest.class);
 
     @Test
-    public void propertiesAreLoadedFromDatabaseAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
+    public void propertiesAreLoadedFromDbAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
+        
+        // When
+        DynamicStringProperty propertyFromArchaiusJdbc = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, propertyArchaiusKey);
 
-        // when  initial value at set in DB
-        LOGGER.info("runnig test for initial values");
-        // then  initial value should be retrieved from DB.
-        DynamicStringProperty prop2 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyTwo, propertyArchaiusKeyTwo);
+        // Then
+        assertThat(propertyFromArchaiusJdbc.get(), is(equalTo(originalExpectedArchaiusPropertyValue)));   
+    }
 
-        assertThat(prop2.get(), is(equalTo(expectedArchaiusPropertyValueTwo)));
+    public void propertiesLoadedFromTheDbWhichAreChangedInTheDbAlsoChangeInJava() throws Exception {
 
-        DynamicStringProperty prop3 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyThree, propertyArchaiusKeyThree);
-
-        assertThat(prop3.get(), is(equalTo(expectedArchaiusPropertyValueThree)));
-
-        // when  updated the value in db
+        // When
         UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
         updateTestData.initializedDerby();
         Thread.sleep(100);
 
-        LOGGER.info("runnig test for updated values");
-        // then   new value should be reflected.
-        prop2 = DynamicPropertyFactory.getInstance().getStringProperty(newArchaiusPropertyKeyTwo, newArchaiusPropertyKeyTwo);
-
-        assertThat(prop2.get(), is(equalTo(newExpectedArchaiusPropertyValueTwo)));
-
-        prop3 = DynamicPropertyFactory.getInstance().getStringProperty(newArchaiusPropertyKeyThree, newArchaiusPropertyKeyThree);
-
-        assertThat(prop3.get(), is(equalTo(newExpectedArchaiusPropertyValueThree)));
-
+        // Then
+        DynamicStringProperty propertyFromArchaiusJdbc 
+                = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, propertyArchaiusKey);
+        assertThat(propertyFromArchaiusJdbc.get(), is(equalTo(newExpectedArchaiusPropertyValue)));
     }
-
 }

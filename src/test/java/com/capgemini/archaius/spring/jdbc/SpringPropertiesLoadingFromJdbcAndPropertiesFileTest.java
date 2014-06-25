@@ -40,40 +40,49 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/springPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
 @ActiveProfiles("default")
-public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper{
-    
+public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper {
+
     private final String propertyKey = "var2";
     private final String expectedPropertyValue = "MY SECOND VAR";
-    @Value("${" + propertyKey + "}") private String propertyValue;
     
- 
+    @Value("${" + propertyKey + "}")
+    private String propertyValue;
+
     private final String propertyArchaiusKey = "Error404";
     private final String expectedSpringPropertyArchaiusValue = "Page not found";
-    @Value("${" + propertyArchaiusKey + "}") private String propertyArchaiusValue;
-   
+    
+    @Value("${" + propertyArchaiusKey + "}")
+    private String propertyArchaiusValue;
+
     @Test
     public void propertiesAreLoadedFromDatabaseAndAccessedViaTheSpringValueAnnotation() {
         assertThat(propertyArchaiusValue, equalTo(expectedSpringPropertyArchaiusValue));
     }
-        
+
     @Test
     public void springPropertiesAreLoadedFromSingleFileAndAccessedViaTheSpringValueAnnotation() {
         assertThat(propertyValue, equalTo(expectedPropertyValue));
     }
-    
+
     /**
-     * Of course this works as we're just testing Spring - instead we need to document that you can't do this any more
-     * as it will ignore Archaius changes.
-     * 
+     * Of course this works as we're just testing Spring - instead we need to
+     * document that you can't do this any more as it will ignore Archaius
+     * changes.
+     *
      * @throws Exception
      */
     @Test
     public void springPropertiesAreLoadedFromSingleFileAndAccessedViaPropertiesLoadersUtils() throws Exception {
-        
+
         Resource resource = new ClassPathResource("properties/archaiusSystem.properties");
         Properties props = PropertiesLoaderUtils.loadProperties(resource);
-        
+
         assertThat(props.containsKey(propertyKey), is(true));
     }
-    
+
+//    @Test
+//    public void springPropertiesAreAlsoLoadedOKFromSingleFileAndAccessedViaTheSpringValueAnnotation() throws InterruptedException {
+//        assertThat(springPropertyValue, equalTo(expectedPropertyValue));
+//        assertThat(springArchaiusPropertyValue, is(equalTo(expectedArchaiusPropertyValue)));
+//    }
 }
