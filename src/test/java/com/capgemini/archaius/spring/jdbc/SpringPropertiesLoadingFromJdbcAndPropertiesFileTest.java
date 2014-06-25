@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.capgemini.archaius.spring.jdbc.Location;
+package com.capgemini.archaius.spring.jdbc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +38,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author skumar81
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/jdbc/springPropertiesLoadingFromDBAndPropertyResourceTest.xml"})
+@ContextConfiguration(locations = {"classpath:spring/jdbc/springPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
 @ActiveProfiles("default")
-public class SpringPropertiesLoadingFromDBAndPropertyResourceTest extends JdbcTestSuper{
+public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper{
     
     private final String propertyKey = "var2";
     private final String expectedPropertyValue = "MY SECOND VAR";

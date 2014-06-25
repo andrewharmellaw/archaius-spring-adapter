@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.capgemini.archaius.spring.jdbc.Location;
+
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,9 +37,9 @@ import com.netflix.config.DynamicStringProperty;
  * @author skumar81
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:archaiusJdbc/archaiusOverLoadingOfPropertyResourceTest.xml" })
+@ContextConfiguration(locations = { "classpath:archaiusJdbc/overLoadingPropertyFromFileWithJdbcTest.xml" })
 @ActiveProfiles("default")
-public class ArchaiusOverLoadingOfPropertyResourceTest extends JdbcTestSuper {
+public class OverLoadingPropertyFromFileWithJdbcTest extends JdbcTestSuper {
 
 	@Autowired
 	@Qualifier("camel")

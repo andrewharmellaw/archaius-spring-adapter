@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.capgemini.archaius.spring.jdbc.Location;
+package com.capgemini.archaius.spring.jdbc;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -40,9 +40,9 @@ import com.netflix.config.DynamicStringProperty;
  * @author skumar81
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:camel/jdbc/camelPropertiesLoadingFromDBandPropertyResourceTest.xml"})
+@ContextConfiguration(locations = {"classpath:camel/jdbc/camelPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
 @ActiveProfiles("default")
-public class CamelPropertiesLoadingFromDBandPropertyResourceTest extends JdbcTestSuper {
+public class CamelPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper {
 
     private final String propertyKey = "var2";
     private final String nonExistentPropertyKey = "bad_key";
