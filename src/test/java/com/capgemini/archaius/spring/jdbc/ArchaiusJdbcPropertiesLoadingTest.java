@@ -15,18 +15,11 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -34,18 +27,18 @@ import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 /**
  *
  * @author Sanjay Kumar.
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/archaiusJdbcPropertiesLoadingTest.xml"})
+@ContextConfiguration(locations = {"classpath:spring/jdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class ArchaiusJdbcPropertiesLoadingTest extends JdbcTestSuper {
-
-    @Autowired
-    @Qualifier("camel")
-    protected CamelContext context;
 
     private final String propertyArchaiusKeyTwo = "Error404";
     private final String expectedArchaiusPropertyValueTwo = "Page not found";
