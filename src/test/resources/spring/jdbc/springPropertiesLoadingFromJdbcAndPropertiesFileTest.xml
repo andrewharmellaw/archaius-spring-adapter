@@ -16,6 +16,4 @@
         <property name="location" value="classpath:properties/archaiusSystem.properties" />
     </bean>
 
-    <camel:camelContext id="camel" />
-
 </beans>

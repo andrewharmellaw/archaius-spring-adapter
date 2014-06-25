@@ -15,6 +15,10 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
+import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest;
+import java.util.Properties;
+import static org.hamcrest.CoreMatchers.equalTo;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +29,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.capgemini.archaius.spring.jdbc.JdbcTestSuper;
-
-import java.util.Properties;
-
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -40,7 +39,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/springPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
 @ActiveProfiles("default")
-public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper {
+public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends ArchaiusJdbcTest {
 
     private final String propertyKey = "var2";
     private final String expectedPropertyValue = "MY SECOND VAR";
@@ -79,10 +78,17 @@ public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTe
 
         assertThat(props.containsKey(propertyKey), is(true));
     }
+    
+    @Test
+    public void propertiesAreLoadedFromDatabaseAndAccessedViaTheSpringValueAnnotationButAreNotDynamic() throws InterruptedException {
 
-//    @Test
-//    public void springPropertiesAreAlsoLoadedOKFromSingleFileAndAccessedViaTheSpringValueAnnotation() throws InterruptedException {
-//        assertThat(springPropertyValue, equalTo(expectedPropertyValue));
-//        assertThat(springArchaiusPropertyValue, is(equalTo(expectedArchaiusPropertyValue)));
-//    }
+        assertThat(propertyValue, equalTo(expectedPropertyValue));
+
+        // when updating the data in DB
+        UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
+        updateTestData.initializedDerby();
+
+        //then  still spring context will have old data not the new values
+        assertThat(propertyValue, equalTo(expectedPropertyValue));
+    }
 }

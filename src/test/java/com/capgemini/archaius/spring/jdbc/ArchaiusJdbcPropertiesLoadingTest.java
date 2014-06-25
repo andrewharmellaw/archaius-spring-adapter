@@ -38,7 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class ArchaiusJdbcPropertiesLoadingTest extends JdbcTestSuper {
+public class ArchaiusJdbcPropertiesLoadingTest extends ArchaiusJdbcTest {
 
     private final String propertyArchaiusKey = "Error404";
     private final String originalExpectedArchaiusPropertyValue = "Page not found";

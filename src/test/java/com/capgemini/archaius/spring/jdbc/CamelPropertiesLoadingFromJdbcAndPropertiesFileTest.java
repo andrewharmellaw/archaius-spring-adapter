@@ -41,7 +41,7 @@ import static org.junit.Assert.fail;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:camel/jdbc/camelPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
 @ActiveProfiles("default")
-public class CamelPropertiesLoadingFromJdbcAndPropertiesFileTest extends JdbcTestSuper {
+public class CamelPropertiesLoadingFromJdbcAndPropertiesFileTest extends ArchaiusJdbcTest {
 
     private final String propertyArchaiusKey = "var2";
     private final String nonExistentPropertyKey = "bad_key";

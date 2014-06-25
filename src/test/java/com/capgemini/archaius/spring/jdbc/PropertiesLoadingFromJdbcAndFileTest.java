@@ -39,50 +39,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/propertiesLoadingFromJdbcAndFileTest.xml"})
 @ActiveProfiles("default")
-public class PropertiesLoadingFromJdbcAndFileTest extends JdbcTestSuper {
-
-    @Autowired
-    @Qualifier("camel")
-    protected CamelContext context;
+public class PropertiesLoadingFromJdbcAndFileTest extends ArchaiusJdbcTest {
 
     private final String propertyArchaiusKeyTwo = "Error404";
     private final String expectedArchaiusPropertyValueTwo = "Page not found";
 
-    private final String propertyArchaiusKeyThree = "Error500";
-    private final String expectedArchaiusPropertyValueThree = "Internal Server Error";
-
-    private final String newArchaiusPropertyKeyTwo = "Error404";
-    private final String newExpectedArchaiusPropertyValueTwo = "New Page not found";
-
-    private final String newArchaiusPropertyKeyThree = "Error500";
-    private final String newExpectedArchaiusPropertyValueThree = "New Internal Server Error";
-
     @Test
     public void propertiesAreLoadedFromDatabaseAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
 
-        // when  initial value loaded at context loading 
-        // then  initial value should be retrieved from DB.
         DynamicStringProperty prop2 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyTwo, propertyArchaiusKeyTwo);
-
         assertThat(prop2.get(), is(equalTo(expectedArchaiusPropertyValueTwo)));
-
-        DynamicStringProperty prop3 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyThree, propertyArchaiusKeyThree);
-
-        assertThat(prop3.get(), is(equalTo(expectedArchaiusPropertyValueThree)));
-
-        // when  updated the value in DB
-        UpdateTestDataForArchaiusTest updateTestData = new UpdateTestDataForArchaiusTest();
-        updateTestData.initializedDerby();
-        Thread.sleep(100);
-
-        // then   new value should be reflected.
-        prop2 = DynamicPropertyFactory.getInstance().getStringProperty(newArchaiusPropertyKeyTwo, newArchaiusPropertyKeyTwo);
-
-        assertThat(prop2.get(), is(equalTo(newExpectedArchaiusPropertyValueTwo)));
-
-        prop3 = DynamicPropertyFactory.getInstance().getStringProperty(newArchaiusPropertyKeyThree, newArchaiusPropertyKeyThree);
-
-        assertThat(prop3.get(), is(equalTo(newExpectedArchaiusPropertyValueThree)));
-
+    }
+    
+    @Test 
+    public void propertiesAreLoadedFromFileTest() {
+        
     }
 }

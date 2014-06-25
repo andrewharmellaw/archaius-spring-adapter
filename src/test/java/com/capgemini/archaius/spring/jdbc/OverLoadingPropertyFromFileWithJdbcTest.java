@@ -35,27 +35,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/overLoadingPropertyFromFileWithJdbcTest.xml"})
 @ActiveProfiles("default")
-public class OverLoadingPropertyFromFileWithJdbcTest extends JdbcTestSuper {
+public class OverLoadingPropertyFromFileWithJdbcTest extends ArchaiusJdbcTest {
 
-    private final String propertyArchaiusKeyTwo = "Error404";
-    private final String expectedArchaiusPropertyValueTwo = "Page not found";
+    private final String overloadedPropertyArchaiusKey = "Error404";
+    private final String expectedOverloadedArchaiusPropertyValue = "Page not found";
 
-    private final String propertyArchaiusKeyThree = "Error405";
-    private final String expectedArchaiusPropertyValueThree = "Method Not Allowed from Property file";
+    private final String notOverloadedPropertyArchaiusKey = "Error405";
+    private final String expectedNotOverloadedArchaiusPropertyValue = "This will not be overloaded by Jdbc - Method Not Allowed from Property file";
 
     @Test
-    public void propertiesAreLoadedFromDatabaseAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
+    public void propertyOverloadingWorksWithJdbcPropertiesTest() throws InterruptedException {
 
-        // value of Error is loaded from Database and overriding the value read from properties file.	
-        DynamicStringProperty prop2 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyTwo, propertyArchaiusKeyTwo);
+        DynamicStringProperty prop2 
+                = DynamicPropertyFactory.getInstance().getStringProperty(overloadedPropertyArchaiusKey, overloadedPropertyArchaiusKey);
+        assertThat(prop2.get(), is(equalTo(expectedOverloadedArchaiusPropertyValue)));
 
-        assertThat(prop2.get(), is(equalTo(expectedArchaiusPropertyValueTwo)));
-
-        // value of Errorcode is loaded from properties file as the same is not available in DB.
-        DynamicStringProperty prop4 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyThree, propertyArchaiusKeyThree);
-
-        assertThat(prop4.get(), is(equalTo(expectedArchaiusPropertyValueThree)));
-
+        DynamicStringProperty prop4 
+                = DynamicPropertyFactory.getInstance().getStringProperty(notOverloadedPropertyArchaiusKey, notOverloadedPropertyArchaiusKey);
+        assertThat(prop4.get(), is(equalTo(expectedNotOverloadedArchaiusPropertyValue)));
     }
-
 }

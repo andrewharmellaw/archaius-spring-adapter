@@ -39,7 +39,7 @@ import static org.hamcrest.CoreMatchers.not;
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:camel/jdbc/camelJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
-public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
+public class CamelJdbcPropertiesLoadingTest extends ArchaiusJdbcTest {
 
     @Autowired
     @Qualifier("camel")
