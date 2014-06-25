@@ -1,0 +1,115 @@
+----------------------------------------------------------------
+Tue Jun 24 14:38:59 GMT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0146-ce50-ca46-00000617f248 
+on database directory memory:C:\Users\skumar81\git\archaius-spring-adapter\jdbcDemoDB with class loader sun.misc.Launcher$AppClassLoader@27feae0f 
+Loaded from file:/D:/Users/skumar81/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_55-b13
+user.dir=C:\Users\skumar81\git\archaius-spring-adapter
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Jun 24 14:39:02 GMT 2014:
+Shutting down instance a816c00e-0146-ce50-ca46-00000617f248 on database directory memory:C:\Users\skumar81\git\archaius-spring-adapter\jdbcDemoDB with class loader sun.misc.Launcher$AppClassLoader@27feae0f 
+Tue Jun 24 14:39:02 GMT 2014 Thread[pollingConfigurationSource,5,main] Cleanup action starting
+java.sql.SQLException: Database 'memory:jdbcDemoDB' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection40.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver40.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.Driver20.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(DriverManager.java:571)
+	at java.sql.DriverManager.getConnection(DriverManager.java:187)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnectionFromDriverManager(DriverManagerDataSource.java:291)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnectionFromDriverManager(DriverManagerDataSource.java:277)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnectionFromDriverManager(DriverManagerDataSource.java:259)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnection(DriverManagerDataSource.java:240)
+	at com.netflix.config.sources.JDBCConfigurationSource.getConnection(JDBCConfigurationSource.java:143)
+	at com.netflix.config.sources.JDBCConfigurationSource.load(JDBCConfigurationSource.java:105)
+	at com.netflix.config.sources.JDBCConfigurationSource.poll(JDBCConfigurationSource.java:88)
+	at com.netflix.config.AbstractPollingScheduler$1.run(AbstractPollingScheduler.java:163)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:304)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:178)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.sql.SQLException: Database 'memory:jdbcDemoDB' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 29 more
+============= begin nested exception, level (1) ===========
+java.sql.SQLException: Database 'memory:jdbcDemoDB' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection40.<init>(Unknown Source)
+	at org.apache.derby.jdbc.Driver40.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.Driver20.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(DriverManager.java:571)
+	at java.sql.DriverManager.getConnection(DriverManager.java:187)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnectionFromDriverManager(DriverManagerDataSource.java:291)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnectionFromDriverManager(DriverManagerDataSource.java:277)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnectionFromDriverManager(DriverManagerDataSource.java:259)
+	at org.springframework.jdbc.datasource.DriverManagerDataSource.getConnection(DriverManagerDataSource.java:240)
+	at com.netflix.config.sources.JDBCConfigurationSource.getConnection(JDBCConfigurationSource.java:143)
+	at com.netflix.config.sources.JDBCConfigurationSource.load(JDBCConfigurationSource.java:105)
+	at com.netflix.config.sources.JDBCConfigurationSource.poll(JDBCConfigurationSource.java:88)
+	at com.netflix.config.AbstractPollingScheduler$1.run(AbstractPollingScheduler.java:163)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:304)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:178)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+============= end nested exception, level (1) ===========
+Cleanup action completed
+----------------------------------------------------------------
+Tue Jun 24 14:39:02 GMT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 3ea3c0fb-0146-ce50-ca46-00000617f248 
+on database directory memory:C:\Users\skumar81\git\archaius-spring-adapter\jdbcDemoDB with class loader sun.misc.Launcher$AppClassLoader@27feae0f 
+Loaded from file:/D:/Users/skumar81/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_55-b13
+user.dir=C:\Users\skumar81\git\archaius-spring-adapter
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue Jun 24 14:39:02 GMT 2014:
+Shutting down instance 3ea3c0fb-0146-ce50-ca46-00000617f248 on database directory memory:C:\Users\skumar81\git\archaius-spring-adapter\jdbcDemoDB with class loader sun.misc.Launcher$AppClassLoader@27feae0f 
+----------------------------------------------------------------
+Tue Jun 24 14:39:02 GMT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 36e280fc-0146-ce50-ca46-00000617f248 
+on database directory memory:C:\Users\skumar81\git\archaius-spring-adapter\jdbcDemoDB with class loader sun.misc.Launcher$AppClassLoader@27feae0f 
+Loaded from file:/D:/Users/skumar81/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_55-b13
+user.dir=C:\Users\skumar81\git\archaius-spring-adapter
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
