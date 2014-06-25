@@ -134,4 +134,4 @@ Developers
 * [Gaythu Rajan](https://github.com/gaythu-rajan)
 * [Nick Walter](https://github.com/nickjwalter)
 * [Russell Hart](https://github.com/rhart)
-* [SAnjay Kumar](https://github.com/sanjay.kumar81@capgemini.com)
+* [Sanjay Kumar](https://github.com/sanjay.kumar81@capgemini.com)
