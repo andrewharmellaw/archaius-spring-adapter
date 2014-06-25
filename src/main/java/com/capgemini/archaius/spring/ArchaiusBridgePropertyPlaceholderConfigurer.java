@@ -15,17 +15,18 @@
  */
 package com.capgemini.archaius.spring;
 
-import com.capgemini.archaius.spring.util.JdbcContants;
-import com.netflix.config.ConcurrentCompositeConfiguration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
+import com.netflix.config.ConcurrentCompositeConfiguration;
 import org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer;
+import org.apache.commons.configuration.ConfigurationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import java.util.Properties;
-import org.apache.commons.configuration.ConfigurationConverter;
+import com.capgemini.archaius.spring.util.JdbcContants;
 
 /**
  *

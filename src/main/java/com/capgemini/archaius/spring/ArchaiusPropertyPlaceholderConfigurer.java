@@ -15,12 +15,12 @@
  */
 package com.capgemini.archaius.spring;
 
+import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
-
-import java.util.Properties;
 
 /**
  * 

@@ -15,22 +15,22 @@
  */
 package com.capgemini.archaius.spring;
 
-import com.capgemini.archaius.spring.util.JdbcContants;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+
 import com.netflix.config.ConcurrentCompositeConfiguration;
 import com.netflix.config.DynamicConfiguration;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicURLConfiguration;
 import com.netflix.config.FixedDelayPollingScheduler;
 import com.netflix.config.sources.JDBCConfigurationSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
+import com.capgemini.archaius.spring.util.JdbcContants;
 
 /**
  * This class builds the property configuration factory for the location(s)
@@ -42,7 +42,6 @@ import java.util.Properties;
 class ArchaiusSpringPropertyPlaceholderSupport {
 
     private transient String dbURL;
-    private transient String driverClassName;
     private transient String username;
     private transient String password;
     private transient String sqlQuerry;
@@ -115,7 +114,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         setJdbcConfigurationParameter(jdbcConnectionDetailMap);
 
-        DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password);
+        DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds,
                 sqlQuerry, keyColumnName, valueColumnName);
@@ -149,7 +148,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         //adding database tables to the Archaius  
         setJdbcConfigurationParameter(jdbcConnectionDetailMap);
 
-        DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password);
+        DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
 
@@ -201,7 +200,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         //adding database tables to the Archaius  
         setJdbcConfigurationParameter(jdbcConnectionDetailMap);
 
-        DriverManagerDataSource ds = new DriverManagerDataSource(driverClassName, dbURL, username, password);
+        DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
 
@@ -223,7 +222,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
     private void setJdbcConfigurationParameter(Map<String, String> jdbcConnectionDetailMap) {
         this.dbURL = jdbcConnectionDetailMap.get(JdbcContants.DB_URL);
-        this.driverClassName = jdbcConnectionDetailMap.get(JdbcContants.DRIVER_CLASS_NAME);
         this.username = jdbcConnectionDetailMap.get(JdbcContants.USERNAME);
         this.password = jdbcConnectionDetailMap.get(JdbcContants.PASSWORD);
         this.sqlQuerry = jdbcConnectionDetailMap.get(JdbcContants.SQL_QUERRY);
