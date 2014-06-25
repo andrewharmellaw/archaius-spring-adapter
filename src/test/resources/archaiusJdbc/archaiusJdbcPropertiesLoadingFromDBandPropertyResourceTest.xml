@@ -7,14 +7,15 @@
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.12.2.xsd">
 
     <!-- Config loading via Spring-Archaius -->
-    <bean class="com.capgemini.archaius.spring.ArchaiusJdbcBridgePropertyPlaceholderConfigurer" >
+    <bean class="com.capgemini.archaius.spring.ArchaiusJdbcBridgePropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true" /> <!-- This must come before the locations -->
         <property name="initialDelayMillis" value="1" />
         <property name="delayMillis" value="10" />
         <property name="ignoreDeletesFromSource" value="false" />
-        <property name="jdbcConnectionDetail" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value"  />
+        <property name="jdbcConnectionLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value" />
+        <property name="location" value="classpath:properties/archaiusSystem.properties" />
     </bean>
-	
+
     <camel:camelContext id="camel" />
 
 </beans>

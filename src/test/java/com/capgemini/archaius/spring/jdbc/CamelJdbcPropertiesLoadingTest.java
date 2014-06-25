@@ -25,8 +25,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.capgemini.archaius.spring.jdbc.dataload.DeleteTestDataAndSchemaForArchaiusTest;
-import com.capgemini.archaius.spring.jdbc.dataload.ResetTestDataForArchaiusTest;
 import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -39,7 +37,7 @@ import static org.hamcrest.CoreMatchers.not;
  * @author Sanjay Kumar
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml"})
+@ContextConfiguration(locations = {"classpath:archaiusJdbc/camelJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class CamelJdbcPropertiesLoadingTest extends JdbcTestSuper {
 

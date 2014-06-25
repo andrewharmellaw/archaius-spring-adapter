@@ -39,7 +39,7 @@ import com.netflix.config.DynamicStringProperty;
  * @author Sanjay Kumar.
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml"})
+@ContextConfiguration(locations = {"classpath:archaiusJdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class ArchaiusJdbcPropertiesLoadingTest extends JdbcTestSuper {
 

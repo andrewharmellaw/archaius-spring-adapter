@@ -32,7 +32,7 @@ import com.capgemini.archaius.spring.jdbc.dataload.UpdateTestDataForArchaiusTest
  * @author Sanjay Kumar
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:archaiusJdbc/derbyPropertiesLoadingTest.xml"})
+@ContextConfiguration(locations = {"classpath:archaiusJdbc/springJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class SpringJdbcPropertiesLoadingTest extends JdbcTestSuper {
 
