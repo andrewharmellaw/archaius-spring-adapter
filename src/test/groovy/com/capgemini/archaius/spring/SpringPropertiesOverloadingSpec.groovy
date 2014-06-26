@@ -14,6 +14,7 @@ import spock.lang.Specification
 @ActiveProfiles('default')
 class SpringPropertiesOverloadingSpec extends Specification {
 
+    @SuppressWarnings('GStringExpressionWithinString')
     @Value('${var2}') private final String propertyValue
     private final String expectedPropertyValue = 'MY SECOND VAR (THIS ONE WINS)'
 

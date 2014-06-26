@@ -26,23 +26,24 @@ import spock.lang.Specification
 /**
  * @author Gayathri Thiyagarajan
  */
-@ContextConfiguration(locations = "classpath:camel/camelPropertiesLoadingTest.xml")
-@ActiveProfiles("default")
+@ContextConfiguration(locations = 'classpath:camel/camelPropertiesLoadingTest.xml')
+@ActiveProfiles('default')
 class CamelPropertiesLoadingSpec extends Specification {
 
-    private final String propertyKey = "var2"
-    private final String expectedPropertyValue = "MY SECOND VAR"
-    private final String nonExistentPropertyKey = "bad_key"
+    private final String propertyKey = 'var2'
+    private final String expectedPropertyValue = 'MY SECOND VAR'
+    private final String nonExistentPropertyKey = 'bad_key'
 
+    @SuppressWarnings('GStringExpressionWithinString')
     @Value('${var2}') private final String springPropertyValue
 
     @Autowired
-    @Qualifier("camel")
-    protected CamelContext context;
+    @Qualifier('camel')
+    protected CamelContext context
 
     def "can load camel properties from a single file and access via camel value annotation"() {
         given :
-            String camelPropertyValue = context.resolvePropertyPlaceholders("{{" + propertyKey + "}}")
+            String camelPropertyValue = context.resolvePropertyPlaceholders("{{$propertyKey}}")
         expect:
             context != null
             camelPropertyValue == expectedPropertyValue
@@ -55,10 +56,11 @@ class CamelPropertiesLoadingSpec extends Specification {
 
     def "non existent properties when requested via camel throw IllegalArgumentException"() {
         when :
-            context.resolvePropertyPlaceholders("{{" + nonExistentPropertyKey + "}}")
+            context.resolvePropertyPlaceholders("{{$nonExistentPropertyKey}}")
         then:
             IllegalArgumentException ie = thrown()
-            ie.getMessage() == "Property with key [" + nonExistentPropertyKey + "] not found in properties from text: {{" + nonExistentPropertyKey + "}}"
+            ie.message == "Property with key [$nonExistentPropertyKey] not found in " +
+                    "properties from text: {{$nonExistentPropertyKey}}"
     }
 
 }

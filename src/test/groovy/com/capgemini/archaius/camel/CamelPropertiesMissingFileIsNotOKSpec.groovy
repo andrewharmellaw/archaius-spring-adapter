@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.capgemini.archaius.camel;
+package com.capgemini.archaius.camel
 
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.test.context.ActiveProfiles;
-import spock.lang.Specification;
+import org.springframework.beans.factory.BeanCreationException
+import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.test.context.ActiveProfiles
+import spock.lang.Specification
 
 /**
  * @author: Gayathri Thiyagarajan
  * @version: 1.0
  */
-@ActiveProfiles("default")
-public class CamelPropertiesMissingFileIsNotOKSpec extends Specification {
+@ActiveProfiles('default')
+class CamelPropertiesMissingFileIsNotOKSpec extends Specification {
 
     def"missing camel properties files is not ok if IgnoreResourceNotFound property set to false"() {
         when:
-        ctx = new ClassPathXmlApplicationContext("camel/camelPropertiesMissingFileIsNotOKTest.xml");
+        ctx = new ClassPathXmlApplicationContext('camel/camelPropertiesMissingFileIsNotOKTest.xml')
         then:
-        BeanCreationException bce = thrown();
-        bce.getCause().getMessage() == "Failed properties: Property 'locations' threw exception; nested exception is java.lang.RuntimeException: Problem setting the locations."
+        BeanCreationException bce = thrown()
+        bce.cause.message == 'Failed properties: Property \'locations\' threw exception; nested exception ' +
+                'is java.lang.RuntimeException: Problem setting the locations.'
     }
 
 }

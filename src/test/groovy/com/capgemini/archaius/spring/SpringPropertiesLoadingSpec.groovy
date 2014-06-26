@@ -35,6 +35,7 @@ class SpringPropertiesLoadingSpec extends Specification {
 
     private final String propertyKey = 'var2'
     private final String expectedPropertyValue = 'MY SECOND VAR'
+    @SuppressWarnings('GStringExpressionWithinString')
     @Value('${var2}') private final String propertyValue
 
     def "can load Spring properties from a single file and access via an annotation"() {

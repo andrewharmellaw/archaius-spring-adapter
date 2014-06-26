@@ -13,7 +13,9 @@ import spock.lang.Specification
 @ContextConfiguration(locations = 'classpath:spring/springPropertiesMissingFileIsOKTest.xml')
 class SpringPropertiesMissingFileIsOkSpec extends Specification {
 
+    @SuppressWarnings('GStringExpressionWithinString')
     @Value('${var2}') private final String propertyValue
+
     private final String expectedPropertyValue = 'MY SECOND VAR'
 
     def "missing spring properties files is ok if IgnoreResourceNotFound property set to true" () {

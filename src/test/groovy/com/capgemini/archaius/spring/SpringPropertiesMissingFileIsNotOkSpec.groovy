@@ -16,7 +16,7 @@ class SpringPropertiesMissingFileIsNotOkSpec extends Specification {
         when:
             ctx = new ClassPathXmlApplicationContext('spring/springPropertiesMissingFileIsNotOKTest.xml')
         then:
-            BeanCreationException bce = thrown();
+            BeanCreationException bce = thrown()
             bce.cause.message == 'Failed properties: Property \'locations\' threw exception; nested exception is ' +
                     'java.lang.RuntimeException: Problem setting the locations.'
     }
