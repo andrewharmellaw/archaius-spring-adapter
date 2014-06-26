@@ -89,7 +89,6 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
 
     @Override
     public void setLocation(Resource location) {
-
         try {
             // TODO: Make this not get executed
             // If there is not also a JDBC locaiton
@@ -108,7 +107,6 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
 
     @Override
     public void setLocations(Resource[] locations) {
-        ConcurrentCompositeConfiguration conComConfiguration = null;
         try {
             if (jdbcConnectionDetailMap == null) {
                 propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis,
@@ -116,7 +114,7 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
                 super.setLocations(locations);
             } else {
                 Map<String, String> defaultParameterMap = getDefaultParamMap();
-                conComConfiguration=propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
+                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
         } catch (IOException ex) {

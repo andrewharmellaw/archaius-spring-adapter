@@ -15,16 +15,20 @@
  */
 package com.capgemini.archaius.spring;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.Map;
+import java.util.Properties;
 
+import com.netflix.config.ConcurrentCompositeConfiguration;
+import org.apache.commons.configuration.ConfigurationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 
 import com.capgemini.archaius.spring.util.JdbcContants;
+
 
 /**
  * 
@@ -90,8 +94,7 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
             // TODO: Make this not get executed
             // If there is not also a JDBC locaiton
             if (jdbcConnectionDetailMap == null) {
-                propertyPlaceholderSupport.setLocation(
-                        location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
             } else {
                 propertyPlaceholderSupport.setMixResourcesAsPropertySource(location, jdbcConnectionDetailMap);
             }
@@ -104,10 +107,15 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     @Override
     public void setLocations(Resource[] locations) {
         try {
-            propertyPlaceholderSupport.setLocations(
-                    locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-            super.setLocations(locations);
-        } catch (Exception ex) {
+            if (jdbcConnectionDetailMap == null) {
+                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                super.setLocations(locations);
+            } else {
+                Map<String, String> defaultParameterMap = getDefaultParamMap();
+                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
+                super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
+            }
+        } catch (IOException ex) {
             LOGGER.error("Problem setting the locations", ex);
             throw new RuntimeException("Problem setting the locations.", ex);
         }
@@ -152,5 +160,17 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
             }
         }
         return jdbcMap;
+    }
+    
+    // TODO: move this
+    private Map<String, String> getDefaultParamMap() {
+        Map<String, String> defaultParameterMap = new HashMap<>();
+        
+        defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
+        defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
+        defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeletesFromSource));
+        defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
+        
+        return defaultParameterMap;
     }
 }
