@@ -83,8 +83,7 @@ public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends Abstra
         assertThat(propertyArchaiusValue, equalTo(expectedSpringPropertyArchaiusValue));
 
         // when updating the data in DB
-        ArchaiusPropertyDataUpdater updateTestData = new ArchaiusPropertyDataUpdater();
-        updateTestData.updatePropertyData();
+        ArchaiusPropertyDataUpdater.updatePropertyData();
 
         //then  still spring context will have old data not the new values
         assertThat(propertyValue, equalTo(expectedPropertyValue));

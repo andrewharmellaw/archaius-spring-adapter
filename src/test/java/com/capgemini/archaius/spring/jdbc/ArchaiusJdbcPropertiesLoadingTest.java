@@ -17,13 +17,13 @@ package com.capgemini.archaius.spring.jdbc;
 
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
-import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import com.capgemini.archaius.spring.jdbc.derby.ArchaiusPropertyDataUpdater;
@@ -37,7 +37,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Sanjay Kumar
  * @autrhor Andrew Harmel-Law
  */
-@RunWith(CamelSpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/archaiusJdbcPropertiesLoadingTest.xml"})
 @ActiveProfiles("default")
 public class ArchaiusJdbcPropertiesLoadingTest extends AbstractArchaiusJdbcTest {

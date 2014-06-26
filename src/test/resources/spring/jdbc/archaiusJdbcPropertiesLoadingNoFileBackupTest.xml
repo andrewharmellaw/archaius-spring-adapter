@@ -7,7 +7,7 @@
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.12.2.xsd">
 
     <!-- Config loading via Spring-Archaius -->
-    <bean class="com.capgemini.archaius.spring.ArchaiusBridgePropertyPlaceholderConfigurer" >
+    <bean class="com.capgemini.archaius.spring.ArchaiusPropertyPlaceholderConfigurer" >
         <property name="ignoreResourceNotFound" value="true" /> <!-- This must come before the locations -->
         <property name="initialDelayMillis" value="1" />
         <property name="delayMillis" value="10" />

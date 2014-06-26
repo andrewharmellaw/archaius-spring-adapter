@@ -15,15 +15,15 @@ package com.capgemini.archaius.spring.jdbc;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
-import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
+import com.netflix.config.DynamicPropertyFactory;
+import com.netflix.config.DynamicStringProperty;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.netflix.config.DynamicPropertyFactory;
-import com.netflix.config.DynamicStringProperty;
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -33,7 +33,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author skumar81
  */
-@RunWith(CamelSpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/overLoadingPropertyFromFileWithJdbcTest.xml"})
 @ActiveProfiles("default")
 public class OverLoadingPropertyFromFileWithJdbcTest extends AbstractArchaiusJdbcTest {

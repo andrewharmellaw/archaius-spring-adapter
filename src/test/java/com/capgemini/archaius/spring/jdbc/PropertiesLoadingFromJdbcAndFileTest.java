@@ -15,19 +15,16 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
-import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
-import org.apache.camel.CamelContext;
-import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-
-import com.capgemini.archaius.spring.jdbc.derby.ArchaiusPropertyDataUpdater;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,9 +32,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
- * @author skumar81
+ * @author Sanjay Kumar
+ * @author Andrew Harmel-Law
  */
-@RunWith(CamelSpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/propertiesLoadingFromJdbcAndFileTest.xml"})
 @ActiveProfiles("default")
 public class PropertiesLoadingFromJdbcAndFileTest extends AbstractArchaiusJdbcTest {
@@ -50,10 +48,5 @@ public class PropertiesLoadingFromJdbcAndFileTest extends AbstractArchaiusJdbcTe
 
         DynamicStringProperty prop2 = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKeyTwo, propertyArchaiusKeyTwo);
         assertThat(prop2.get(), is(equalTo(expectedArchaiusPropertyValueTwo)));
-    }
-    
-    @Test 
-    public void propertiesAreLoadedFromFileTest() {
-        
     }
 }

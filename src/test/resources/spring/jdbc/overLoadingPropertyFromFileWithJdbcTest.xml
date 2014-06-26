@@ -7,7 +7,7 @@
                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.12.2.xsd">
 
     <!-- Config loading via Spring-Archaius -->
-    <bean class="com.capgemini.archaius.spring.ArchaiusBridgePropertyPlaceholderConfigurer">
+    <bean class="com.capgemini.archaius.spring.ArchaiusPropertyPlaceholderConfigurer">
         <property name="jdbcLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value" />
         <property name="location" value="classpath:properties/archaiusPropertyOverloading.properties" />
     </bean>
