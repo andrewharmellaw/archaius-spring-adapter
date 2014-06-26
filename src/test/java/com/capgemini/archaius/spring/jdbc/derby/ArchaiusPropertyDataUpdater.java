@@ -13,24 +13,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class update the test data for Archaius to new value. Error500 = New
- * Internal Server Error Error404 = New Page not found Error400 = New Bad
- * Request
+ * This class update the test data for Archaius to new value.
+ * <UL>
+ * <LI>Error500 = New Internal Server Error</LI>
+ * <LI>Error404 = New Page not found Error400 = New Bad Request</LI>
+ * </UL>
  *
  * @author Sanjay Kumar
+ * @author Andrew Harmel-Law
  */
 public class ArchaiusPropertyDataUpdater extends AbstractDerbyDriverLoader {
 
-    public static  Logger LOGGER = LoggerFactory.getLogger(ArchaiusPropertyDataUpdater.class);
+    public static Logger LOGGER = LoggerFactory.getLogger(ArchaiusPropertyDataUpdater.class);
 
-    public void updatePropertyData() {
+    public static void updatePropertyData() {
         loadDriver();
 
         Connection conn = null;
 
         ArrayList<Statement> statements = new ArrayList<>(); // list of Statements,
-        PreparedStatement psUpdate = null;
-        Statement s = null;
+        PreparedStatement psUpdate;
+        Statement s;
         ResultSet rs = null;
 
         try {
@@ -42,22 +45,15 @@ public class ArchaiusPropertyDataUpdater extends AbstractDerbyDriverLoader {
 
             conn = DriverManager.getConnection(protocol + dbName + ";create=false", props);
 
-            LOGGER.info("Connected to and created database " + dbName);
+            LOGGER.debug("Connected to and created database " + dbName);
 
             conn.setAutoCommit(false);
 
-            /*
-             * Creating a statement object that we can use for running various
-             * SQL statements commands against the database.
-             */
             s = conn.createStatement();
             statements.add(s);
-
-            LOGGER.info("Created table MySiteProperties");
-
-            // Let's update some rows as well...
-            psUpdate = conn.prepareStatement(
-                    "update MYSITEPROPERTIES set property_key=?, property_value=? where property_key=?");
+            
+            // Let
+            psUpdate = conn.prepareStatement("update MYSITEPROPERTIES set property_key=?, property_value=? where property_key=?");
             statements.add(psUpdate);
 
             psUpdate.setString(1, "Error500");
@@ -73,16 +69,14 @@ public class ArchaiusPropertyDataUpdater extends AbstractDerbyDriverLoader {
             LOGGER.info("Updated Error404");
 
             conn.commit();
+            
+            LOGGER.info("Updated properties fresh from the database:");
             rs = s.executeQuery("SELECT property_key, property_value FROM MYSITEPROPERTIES");
-
             while (rs.next()) {
-
                 LOGGER.info("property_key : " + rs.getString(1));
-                LOGGER.info(" and property_value : " + rs.getString(2));
+                LOGGER.info("and property_value : " + rs.getString(2));
             }
-
             conn.commit();
-            LOGGER.info("Committed the transaction");
 
         } catch (SQLException sqle) {
             printSQLException(sqle);

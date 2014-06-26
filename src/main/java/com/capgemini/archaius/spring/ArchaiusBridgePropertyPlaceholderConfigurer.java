@@ -15,6 +15,7 @@
  */
 package com.capgemini.archaius.spring;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -34,15 +35,18 @@ import com.capgemini.archaius.spring.util.JdbcContants;
  */
 public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyPlaceholderConfigurer {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class);
+    
     public static final int DEFAULT_DELAY = 1000;
-    // settings for dynamic property configuration
+    
     private transient int initialDelayMillis = DEFAULT_DELAY;
     private transient int delayMillis = DEFAULT_DELAY;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class);
-    private final transient ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport
-            = new ArchaiusSpringPropertyPlaceholderSupport();
     private transient boolean ignoreResourceNotFound;
     private transient boolean ignoreDeletesFromSource = true;
+    
+    private final transient ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport
+            = new ArchaiusSpringPropertyPlaceholderSupport();
+    
     private transient Map<String, String> jdbcConnectionDetailMap = null;
 
     @Override
@@ -87,17 +91,17 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     public void setLocation(Resource location) {
         ConcurrentCompositeConfiguration conComConfiguration = null;
         try {
+            // TODO: Make this not get executed
+            // If there is not also a JDBC locaiton
             if (jdbcConnectionDetailMap == null) {
                 propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
                 super.setLocation(location);
             } else {
-
-                Map<String, String> defaultParameterMap = getDefaultParamMap();
-                conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location,
-                        defaultParameterMap, jdbcConnectionDetailMap);
+                conComConfiguration 
+                        = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             LOGGER.error("Problem setting the location.", ex);
             throw new RuntimeException("Problem setting the location.", ex);
         }
@@ -116,18 +120,20 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
                 propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             LOGGER.error("Problem setting the locations", ex);
             throw new RuntimeException("Problem setting the locations.", ex);
         }
     }
     
+    // TODO: REMOVE THIS
     public void setjdbcLocation(String jdbcLocation) {
         if (jdbcLocation != null) {
             jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcLocation);
         }
     }
 
+    // TODO: Move this
     private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
         Map<String, String> jdbcMap = new HashMap<>();
 
@@ -161,13 +167,15 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
         return jdbcMap;
     }
 
+    // TODO: move this
     private Map<String, String> getDefaultParamMap() {
         Map<String, String> defaultParameterMap = new HashMap<>();
+        
         defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
         defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
         defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeletesFromSource));
         defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
+        
         return defaultParameterMap;
-
     }
 }

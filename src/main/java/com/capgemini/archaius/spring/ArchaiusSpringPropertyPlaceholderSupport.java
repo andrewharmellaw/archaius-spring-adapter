@@ -16,6 +16,7 @@
 package com.capgemini.archaius.spring;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -41,15 +42,17 @@ import com.capgemini.archaius.spring.util.JdbcContants;
  */
 class ArchaiusSpringPropertyPlaceholderSupport {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusSpringPropertyPlaceholderSupport.class);
+
+    public static final int DEFAULT_DELAY = 1000;
+    
     private transient String dbURL;
     private transient String username;
     private transient String password;
     private transient String sqlQuerry;
     private transient String keyColumnName;
     private transient String valueColumnName;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusSpringPropertyPlaceholderSupport.class);
-
+    
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
@@ -101,7 +104,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         DynamicPropertyFactory.initWithConfigurationSource(config);
     }
 
-    public DynamicConfiguration setJdbcResourceAsArchaiusPropetiesSource(Map<String, String> jdbcConnectionDetailMap,
+    public DynamicConfiguration setJdbcResourceAsArchaiusPropetiesSource(
+            Map<String, String> jdbcConnectionDetailMap,
             int initialDelayMillis,
             int delayMillis,
             boolean ignoreDeletesFromSource) {
@@ -112,7 +116,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                     "Archaius is already configured with a property source/sources.");
         }
 
-        setJdbcConfigurationParameter(jdbcConnectionDetailMap);
+        setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
         DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
@@ -128,7 +132,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return configuration;
     }
 
-    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(Resource[] locations,
+    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(
+            Resource[] locations,
             Map<String, String> defaultParameterMap, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
@@ -145,8 +150,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         //TODO add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
-        //adding database tables to the Archaius  
-        setJdbcConfigurationParameter(jdbcConnectionDetailMap);
+        //adding database tables to Archaius  
+        setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
         DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
@@ -158,13 +163,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         conComConfiguration.addConfiguration(dynamicConfiguration);
 
-        // adding file or classpath properties to the Archaius 
+        // adding file or classpath properties to Archaius 
         for (int i = locations.length - 1; i >= 0; i--) {
             try {
                 final String locationURL = locations[i].getURL().toString();
-                conComConfiguration.addConfiguration(new DynamicURLConfiguration(
-                        initialDelayMillis, delayMillis,
-                        ignoreDeletesFromSource, locationURL));
+                conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
             } catch (IOException ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error(
@@ -180,10 +183,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return conComConfiguration;
     }
 
-    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(Resource location,
-            Map<String, String> defaultParameterMap, 
+    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(
+            Resource location,
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
+        Map<String, String> defaultParameterMap = getDefaultParamMap();
+        
         final String locationURL = location.getURL().toString();
         int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
@@ -197,35 +202,42 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 
-        //adding database tables to the Archaius  
-        setJdbcConfigurationParameter(jdbcConnectionDetailMap);
+        // adding database tables to Archaius  
+        setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
         DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
-
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-
         DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-
         conComConfiguration.addConfiguration(dynamicConfiguration);
 
-        // adding file or classpath properties to the Archaius 
+        // Add file, URL or classpath properties to Archaius 
         final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
-
         conComConfiguration.addConfiguration(urlConfiguration);
-
         DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 
         return conComConfiguration;
     }
 
-    private void setJdbcConfigurationParameter(Map<String, String> jdbcConnectionDetailMap) {
+    private void setJdbcConfigurationParameters(Map<String, String> jdbcConnectionDetailMap) {
+    
         this.dbURL = jdbcConnectionDetailMap.get(JdbcContants.DB_URL);
         this.username = jdbcConnectionDetailMap.get(JdbcContants.USERNAME);
         this.password = jdbcConnectionDetailMap.get(JdbcContants.PASSWORD);
         this.sqlQuerry = jdbcConnectionDetailMap.get(JdbcContants.SQL_QUERRY);
         this.keyColumnName = jdbcConnectionDetailMap.get(JdbcContants.KEY_COLUMN_NAME);
         this.valueColumnName = jdbcConnectionDetailMap.get(JdbcContants.VALUE_COLUMN_NAME);
+    }
+    
+    private Map<String, String> getDefaultParamMap() {
+        Map<String, String> defaultParameterMap = new HashMap<>();
+        
+        defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(DEFAULT_DELAY));
+        defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(DEFAULT_DELAY));
+        defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(true));
+        defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(false));
+        
+        return defaultParameterMap;
     }
 }

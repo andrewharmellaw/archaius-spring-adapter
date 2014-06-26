@@ -15,7 +15,8 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
-import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
+import com.netflix.config.DynamicPropertyFactory;
+import com.netflix.config.DynamicStringProperty;
 import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import com.capgemini.archaius.spring.jdbc.derby.ArchaiusPropertyDataUpdater;
-import com.netflix.config.DynamicPropertyFactory;
-import com.netflix.config.DynamicStringProperty;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -34,7 +34,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
- * @author Sanjay Kumar.
+ * @author Sanjay Kumar
+ * @autrhor Andrew Harmel-Law
  */
 @RunWith(CamelSpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/archaiusJdbcPropertiesLoadingTest.xml"})
@@ -48,25 +49,19 @@ public class ArchaiusJdbcPropertiesLoadingTest extends AbstractArchaiusJdbcTest 
     public Logger LOGGER = LoggerFactory.getLogger(ArchaiusJdbcPropertiesLoadingTest.class);
 
     @Test
-    public void propertiesAreLoadedFromDbAndAccessedViaArchaiusDynamicStringProperty() throws InterruptedException {
-        
-        // When
-        DynamicStringProperty propertyFromArchaiusJdbc = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, propertyArchaiusKey);
-
-        // Then
-        assertThat(propertyFromArchaiusJdbc.get(), is(equalTo(originalExpectedArchaiusPropertyValue)));   
-    }
-
     public void propertiesLoadedFromTheDbWhichAreChangedInTheDbAlsoChangeInJava() throws Exception {
 
+        // Given
+        DynamicStringProperty propertyFromArchaiusJdbc 
+                = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, "The property for key: " + propertyArchaiusKey + " was not found");
+        assertThat(propertyFromArchaiusJdbc.get(), is(equalTo(originalExpectedArchaiusPropertyValue)));   
+        
         // When
-        ArchaiusPropertyDataUpdater updateTestData = new ArchaiusPropertyDataUpdater();
-        updateTestData.updatePropertyData();
-        Thread.sleep(100);
+        ArchaiusPropertyDataUpdater.updatePropertyData();
+        Thread.sleep(1000); // give the Archaius poller time to read the updated value
 
         // Then
-        DynamicStringProperty propertyFromArchaiusJdbc 
-                = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, propertyArchaiusKey);
+        propertyFromArchaiusJdbc = DynamicPropertyFactory.getInstance().getStringProperty(propertyArchaiusKey, "The property for key: " + propertyArchaiusKey + " was not found");
         assertThat(propertyFromArchaiusJdbc.get(), is(equalTo(newExpectedArchaiusPropertyValue)));
     }
 }
