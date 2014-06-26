@@ -5,21 +5,21 @@ Archaius Spring Adapter
 
 Welcome to the archaius-spring-adapter. As we say in the POM, our aim is to 
 simply extend the Spring (and Camel) PropertyPlaceholders in order to support 
-Netflix's Archaius as the single of all property information.
+Netflix's Archaius as the single source of all property information.
 
 Why would we go to this trouble?  Properties can be loaded fine into Spring, and
 now, with the BridgePropertyPlaceholder from Camel you can use that same file 
 for your Camel properties too.
 
-But what if you want more? Specifically in our case, our itch that we scratched
+But what if you want more? Specifically, the itch that we scratched
 was the desire to use the Netflix Hystrix circuit breakers in our Spring/Camel 
-projects.  These depend upon Archaius for their config, and as you need to tune
-them, this config is important.  Having already got all our Camel and Spring
-properties in one place, why now accept another properties source just for one 
-more component in our architecture. The archaius-spring-adapter was born.
+projects.  These depend upon Archaius for their configuration, and as you need to tune
+them, this configuration is important.  Having already got all our Camel and Spring
+properties in one place, why would we want to accept _another_ properties source just for one 
+more component in our architecture? After some googling, the archaius-spring-adapter was born.
 
-Finally, it should be noted right up front that while the itch for this 
-scratching did originate with us, we weren't alone. The initial example upon 
+At this point, it should be noted right up front that while the itch for this 
+scratching was ours, we weren't alone. The initial example upon 
 which this code is based can be seen in this Archaius issue thread: 
 
 https://github.com/Netflix/archaius/issues/113
@@ -27,14 +27,11 @@ https://github.com/Netflix/archaius/issues/113
 We'd like to thank the guys there for their support, and permission to release 
 this code licensed under the Apache v2.0 OSS licence.
 
-Get Started
------------
+Getting Started
+---------------
 
-It's dead simple to use the adapter. Just fork the project to your GitHub 
-account (handy if you want to make a pull request later) and then clone it 
-locally (we're not yet in a Maven repo, sorry).  Then simply run:
-
-    mvn clean install
+It's dead simple to use the adapter. Just download one of the releases from this repo, or 
+add our maven bintray repo (find the details in pom.xml) to your maven project. 
 
 Now you're free to start bringing in the archaius goodness.  We're (still) using
 Spring XML config and all you need do if you have Spring alone (i.e. no Camel)
@@ -67,9 +64,10 @@ you can have an ordered list of properties files:
         </property>
     </bean>
 
-With property overloading as you'd expect.
+With property overloading as you'd expect from standard Spring properties.
 
-Finally you can let Spring know whether it can ignore missing resource files:
+Additionally, and again as Spring users will expect, you can let Spring know whether 
+it can ignore missing resource files:
 
     <bean class="com.capgemini.archaius.spring.ArchaiusPropertyPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="false" />
@@ -110,12 +108,36 @@ but you need to use a different bean class:
 
 That's it!
 
+Pushing Things a Little Further
+-------------------------------
+Archaius can do quite a few clever things, and we wanted to support them but couldn't manage it without "extending" the standard Spring idioms a little. 
+
+First up is property polling.  You can read more about the details of this over at the 
+Archaius project elsewhere on GitHub, but to get things going, all you need add to your spring XMl file is the following enclosed within the standard propertyPlaceholder "bean" tags:
+
+    <property name="initialDelayMillis" value="1" />
+    <property name="delayMillis" value="10" />
+    <property name="ignoreDeletesFromSource" value="false" />
+    
+Notes: 
+* this works with both the Spring and Camel-bridge placeholders.
+* this doesn't (currently) make Spring or Camel properties dynamic, as that's a fair old task to implement, but you can get access to your properties in your code via the standard Archaius methods, and these properties _will_ be dynamic.
+
+Second is storing properties in a JDBC-accessed datastore. To do this, you simply need to add this line to your Spring XML:
+
+    <property name="jdbcLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value"  />
+
+We'll put up more documentation on this when we get a chance, but thee URL format is pretty self-explanatory.
+
+Notes:
+* this also works with both the Spring and Camel-bridge placeholders.
+* it also works with the dynamic polling support detailed above
+
 Getting Involved
 ----------------
 
-We're clearly sorting out support for our own problems first, but its clear that 
-there is much more we could add to this project.  We'd love to have
-contributions from folks in all the standard ways:
+We're patently working on support tpo solve our own problems first, but it's also clear that 
+there is much more we could add to this project.  We'd love to have contributions from folks in all the standard ways:
 
 1. Questions and Answers via the Google Group
 1. Issue Reports via GitHub
