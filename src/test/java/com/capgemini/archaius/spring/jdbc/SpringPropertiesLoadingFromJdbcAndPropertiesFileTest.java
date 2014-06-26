@@ -15,7 +15,6 @@
  */
 package com.capgemini.archaius.spring.jdbc;
 
-import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -28,6 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.capgemini.archaius.spring.jdbc.derby.AbstractArchaiusJdbcTest;
 import com.capgemini.archaius.spring.jdbc.derby.ArchaiusPropertyDataUpdater;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -36,7 +36,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
- * @author skumar81
+ * @author Sanjay Kumar
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/jdbc/springPropertiesLoadingFromJdbcAndPropertiesFileTest.xml"})
@@ -44,17 +44,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends AbstractArchaiusJdbcTest {
 
     private final String propertyKey = "var2";
+    @Value("${" + propertyKey + "}") private String propertyValue;
     private final String expectedPropertyValue = "MY SECOND VAR";
     
-    @Value("${" + propertyKey + "}")
-    private String propertyValue;
-
     private final String propertyArchaiusKey = "Error404";
+    @Value("${" + propertyArchaiusKey + "}") private String propertyArchaiusValue;
     private final String expectedSpringPropertyArchaiusValue = "Page not found";
     
-    @Value("${" + propertyArchaiusKey + "}")
-    private String propertyArchaiusValue;
-
     @Test
     public void propertiesAreLoadedFromDatabaseAndAccessedViaTheSpringValueAnnotation() {
         assertThat(propertyArchaiusValue, equalTo(expectedSpringPropertyArchaiusValue));
@@ -84,7 +80,7 @@ public class SpringPropertiesLoadingFromJdbcAndPropertiesFileTest extends Abstra
     @Test
     public void propertiesAreLoadedFromDatabaseAndAccessedViaTheSpringValueAnnotationButAreNotDynamic() throws InterruptedException {
 
-        assertThat(propertyValue, equalTo(expectedPropertyValue));
+        assertThat(propertyArchaiusValue, equalTo(expectedSpringPropertyArchaiusValue));
 
         // when updating the data in DB
         ArchaiusPropertyDataUpdater updateTestData = new ArchaiusPropertyDataUpdater();
