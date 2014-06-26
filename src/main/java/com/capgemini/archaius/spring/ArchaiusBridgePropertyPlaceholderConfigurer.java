@@ -112,7 +112,7 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
                 super.setLocations(locations);
             } else {
                 Map<String, String> defaultParameterMap = getDefaultParamMap();
-                propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
+                conComConfiguration=propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
         } catch (Exception ex) {
