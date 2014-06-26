@@ -24,8 +24,7 @@ which this code is based can be seen in this Archaius issue thread:
 
 https://github.com/Netflix/archaius/issues/113
 
-We'd like to thank the guys there for their support, and permission to release 
-this code licensed under the Apache v2.0 OSS licence.
+We'd like to thank the guys there for their support, especially @mumrah whose gist kicked this all off and @chriswhitcombe for his technical input. We'd also like to thank them for the permission to release this code licensed under the Apache v2.0 OSS licence.
 
 Getting Started
 ---------------
@@ -113,7 +112,7 @@ Pushing Things a Little Further
 Archaius can do quite a few clever things, and we wanted to support them but couldn't manage it without "extending" the standard Spring idioms a little. 
 
 First up is property polling.  You can read more about the details of this over at the 
-Archaius project elsewhere on GitHub, but to get things going, all you need add to your spring XMl file is the following enclosed within the standard propertyPlaceholder "bean" tags:
+Archaius project (https://github.com/Netflix/archaius), but to get things going, all you need add to your spring XMl file is the following enclosed within the standard propertyPlaceholder "bean" tags:
 
     <property name="initialDelayMillis" value="1" />
     <property name="delayMillis" value="10" />
@@ -139,10 +138,9 @@ Getting Involved
 We're patently working on support tpo solve our own problems first, but it's also clear that 
 there is much more we could add to this project.  We'd love to have contributions from folks in all the standard ways:
 
-1. Questions and Answers via the Google Group
+1. Questions and Answers via the Google Group - https://groups.google.com/forum/#!forum/archaius-spring-adapter
 1. Issue Reports via GitHub
-1. Pull Requests (fixes, more tests, new features, typo-corrections etc) via GitHub 
-(we follow the standard workflow)
+1. Pull Requests (fixes, more tests, new features, typo-corrections etc) via GitHub (we follow the standard workflow)
 1. Wiki documentation
 
 We maintain a list of the issues that we're working on as you'd expect.  By
@@ -156,4 +154,4 @@ Developers
 * [Gaythu Rajan](https://github.com/gaythu-rajan)
 * [Nick Walter](https://github.com/nickjwalter)
 * [Russell Hart](https://github.com/rhart)
-* [Sanjay Kumar](https://github.com/sanjay.kumar81@capgemini.com)
+* [Sanjay Kumar](https://github.com/sanjaykumar81)
