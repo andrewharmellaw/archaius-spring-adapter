@@ -1,3 +1,10 @@
+/**
+ * This code has is to activate Derby's built-in authentication mechanism for testing purpose.
+ * This code is modified copy of : 
+ * @see http://www.javadb.net/user-authentication-and-sql-authorization-client-example.html
+ * 
+ */
+
 package com.capgemini.archaius.spring.jdbc.derby;
 
 import java.sql.Connection;
