@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 
-import com.capgemini.archaius.spring.util.JdbcContants;
+import com.capgemini.archaius.spring.constants.JdbcContants;
 
 
 /**

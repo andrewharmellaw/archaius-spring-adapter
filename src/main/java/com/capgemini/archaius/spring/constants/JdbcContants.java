@@ -1,4 +1,4 @@
-package com.capgemini.archaius.spring.util;
+package com.capgemini.archaius.spring.constants;
 
 
 /**

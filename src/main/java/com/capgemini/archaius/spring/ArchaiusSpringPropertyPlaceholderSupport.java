@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.capgemini.archaius.spring.util.JdbcContants;
+import com.capgemini.archaius.spring.constants.JdbcContants;
 
 /**
  * This class builds the property configuration factory for the location(s)
