@@ -16,7 +16,6 @@
 package com.capgemini.archaius.spring;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -26,8 +25,6 @@ import org.apache.commons.configuration.ConfigurationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-
-import com.capgemini.archaius.spring.constants.JdbcContants;
 
 /**
  *
@@ -87,10 +84,18 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
         return propertyPlaceholderSupport.resolvePlaceholder(placeholder, props, systemPropertiesMode);
     }
 
+    /**
+     * Archaius JDBC Connection URI.
+     * 
+     * @param jdbcLocation the URI from the jdbcLocation property in the Spring config
+     */
+    public void setjdbcLocation(String jdbcLocation) {
+        jdbcConnectionDetailMap = propertyPlaceholderSupport.extractJdbcParamaters(jdbcLocation);
+    }
+    
     @Override
     public void setLocation(Resource location) {
         try {
-            // TODO: Make this not get executed
             // If there is not also a JDBC locaiton
             if (jdbcConnectionDetailMap == null) {
                 propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
@@ -123,46 +128,5 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
             LOGGER.error("Problem setting the locations", ex);
             throw new RuntimeException("Problem setting the locations.", ex);
         }
-    }
-    
-    // TODO: REMOVE THIS
-    public void setjdbcLocation(String jdbcLocation) {
-        if (jdbcLocation != null) {
-            jdbcConnectionDetailMap = createDatabaseKeyValueMap(jdbcLocation);
-        }
-    }
-
-    // TODO: Move this
-    private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
-        Map<String, String> jdbcMap = new HashMap<>();
-
-        String delims = "[|][|]";
-
-        if (jdbcUri == null) {
-            LOGGER.info("Argument passed Cant be null. ");
-            LOGGER.error("The argument passes is not correct");
-            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
-                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
-                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
-        }
-
-        String[] tokens = jdbcUri.split(delims);
-
-        if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
-            LOGGER.info("Argument passed : " + jdbcUri);
-            LOGGER.error("The argument passes is not correct");
-            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
-                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
-                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
-        } else {
-            delims = "[#]";
-            for (String keyValue : tokens) {
-                String[] keyAndValue = keyValue.split(delims);
-                jdbcMap.put(keyAndValue[0], keyAndValue[1]);
-            }
-        }
-        return jdbcMap;
     }
 }

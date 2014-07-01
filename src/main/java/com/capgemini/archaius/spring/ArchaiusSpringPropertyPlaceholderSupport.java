@@ -57,6 +57,14 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
 
+    public Map<String, String> extractJdbcParamaters(String jdbcLocation) {
+        if (jdbcLocation != null) {
+            return createDatabaseKeyValueMap(jdbcLocation);
+        } else {
+            return null;
+        }
+    }
+    
     protected void setLocation(Resource location,
             int initialDelayMillis,
             int delayMillis,
@@ -271,5 +279,38 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         parameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
 
         return parameterMap;
+    }
+    
+    private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
+        Map<String, String> jdbcMap = new HashMap<>();
+
+        String delims = "[|][|]";
+
+        if (jdbcUri == null) {
+            LOGGER.info("Argument passed Cant be null. ");
+            LOGGER.error("The argument passes is not correct");
+            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
+        }
+
+        String[] tokens = jdbcUri.split(delims);
+
+        if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
+            LOGGER.info("Argument passed : " + jdbcUri);
+            LOGGER.error("The argument passes is not correct");
+            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
+        } else {
+            delims = "[#]";
+            for (String keyValue : tokens) {
+                String[] keyAndValue = keyValue.split(delims);
+                jdbcMap.put(keyAndValue[0], keyAndValue[1]);
+            }
+        }
+        return jdbcMap;
     }
 }
