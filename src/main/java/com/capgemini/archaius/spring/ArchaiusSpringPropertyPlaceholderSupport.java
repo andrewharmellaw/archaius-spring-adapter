@@ -93,7 +93,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                 config.addConfiguration(new DynamicURLConfiguration(
                         initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
                 ));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error("Exception thrown when adding a configuration location.", ex);
                     throw ex;
@@ -168,7 +168,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             try {
                 final String locationURL = locations[i].getURL().toString();
                 conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error(
                             "Exception thrown when adding a configuration location.",

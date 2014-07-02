@@ -16,6 +16,7 @@
         <property name="locations">
             <list>
                 <value>classpath:properties/archaiusPropertyOverloading.properties</value>
+                <value>file:properties/FileNotFound.properties</value>
             </list>
         </property>
     </bean>
