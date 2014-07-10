@@ -143,13 +143,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     // TODO: Tidy this up
     protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(Map<String, String> parameterMap,
             Resource[] locations, Map<String, String> jdbcConnectionDetailMap) throws IOException {
-//<<<<<<< HEAD
-//            Map<String, String> defaultParameterMap,
-//=======
-//>>>>>>> moving getDefaultParamMap to ArchaiusSpringPropertyPlaceholderSupport
-//            Map<String, String> jdbcConnectionDetailMap) throws IOException {
-
-//        Map<String, String> defaultParameterMap = getDefaultParamMap();
         
         int initialDelayMillis = Integer.parseInt(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.parseInt(parameterMap.get(JdbcContants.DELAY_MILLIS));
@@ -166,23 +159,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
         JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-//<<<<<<< HEAD
-//        try {
-//            DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-//            conComConfiguration.addConfiguration(dynamicConfiguration);
-//        } catch (Exception ex) {
-//            if (!ignoreResourceNotFound) {
-//                LOGGER.error(
-//                        "Exception thrown when adding a configuration jdbcLocation.",
-//                        ex);
-//                throw ex;
-//            }
-//        }
-//=======
+
         DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
 
         conComConfiguration.addConfiguration(dynamicConfiguration);
-//>>>>>>> Factored out buildJdbcConfigSourceFromConnectionDetailsMap and fixed "querry" typo
 
         // adding file or classpath properties to Archaius 
         for (int i = locations.length - 1; i >= 0; i--) {
@@ -222,11 +202,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         // adding database tables to Archaius  
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
-        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
-
-        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
-        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-        DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+//        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
+//        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
+//        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+        DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
         
         conComConfiguration.addConfiguration(dynamicConfiguration);
 
@@ -308,11 +287,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         }
     }
     
-    private DriverManagerDataSource buildDataSourceFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap) {
-        DriverManagerDataSource ds = new DriverManagerDataSource(jdbcConnectionDetailMap.get(JdbcContants.DB_URL),
-                jdbcConnectionDetailMap.get(JdbcContants.USERNAME),
-                jdbcConnectionDetailMap.get(JdbcContants.PASSWORD));
-        return ds;
+    private DynamicConfiguration buildDynamicConfigFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap, int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource) {
+        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
+        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
+        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+        return new DynamicConfiguration(source, scheduler);
     }
     
     private JDBCConfigurationSource buildJdbcConfigSourceFromConnectionDetailsMap(DriverManagerDataSource ds, Map<String, String> jdbcConnectionDetailMap) {
@@ -323,11 +302,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return source;
     }
     
-//    private DynamicConfiguration buildDynamicConfigFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap, int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource) {
-//        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
-//        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
-//        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-////        DynamicConfiguration dc =  new DynamicConfiguration(source, scheduler);
-//        return new DynamicConfiguration(source, scheduler);
-//    }
+    private DriverManagerDataSource buildDataSourceFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap) {
+        DriverManagerDataSource ds = new DriverManagerDataSource(jdbcConnectionDetailMap.get(JdbcContants.DB_URL),
+                jdbcConnectionDetailMap.get(JdbcContants.USERNAME),
+                jdbcConnectionDetailMap.get(JdbcContants.PASSWORD));
+        return ds;
+    }
 }
