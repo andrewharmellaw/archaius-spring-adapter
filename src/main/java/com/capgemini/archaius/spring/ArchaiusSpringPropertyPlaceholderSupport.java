@@ -156,12 +156,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
         boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
-        if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
-            LOGGER.error("There was already a config source (or sources) configured.");
-            throw new IllegalStateException(
-                    "Archaius is already configured with a property source/sources.");
-        }
-
+        ifExistingPropertiesSourceThenThrowIllegalStateException();
+        
         // TODO: add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
         //adding database tables to Archaius  
@@ -215,12 +211,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
         boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
-        if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
-            LOGGER.error("There was already a config source (or sources) configured.");
-            throw new IllegalStateException(
-                    "Archaius is already configured with a property source/sources.");
-        }
-
+        ifExistingPropertiesSourceThenThrowIllegalStateException();
+        
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 
         // adding database tables to Archaius  
@@ -312,5 +304,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             }
         }
         return jdbcMap;
+    }
+    
+    private void ifExistingPropertiesSourceThenThrowIllegalStateException() {
+        if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
+            LOGGER.error("There was already a config source (or sources) configured.");
+            throw new IllegalStateException("Archaius is already configured with a property source/sources.");
+        }
     }
 }
