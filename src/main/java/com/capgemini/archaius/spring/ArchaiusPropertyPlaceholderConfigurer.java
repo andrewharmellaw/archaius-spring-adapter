@@ -118,7 +118,7 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
                 super.setLocations(locations);
             } else {
                 Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
-                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(parameterMap, locations, jdbcConnectionDetailMap);
+                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixedResourcesAsPropertySources(parameterMap, locations, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
         } catch (IOException ex) {
