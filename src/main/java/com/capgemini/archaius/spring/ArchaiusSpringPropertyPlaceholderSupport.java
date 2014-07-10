@@ -49,20 +49,13 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
-
-    public Map<String, String> extractJdbcParamaters(String jdbcLocation) {
-        if (jdbcLocation != null) {
-            return createDatabaseKeyValueMap(jdbcLocation);
-        } else {
-            return null;
-        }
-    }
     
     protected void setLocation(Resource location,
             int initialDelayMillis,
             int delayMillis,
             boolean ignoreDeletesFromSource) throws IOException {
 
+        // TODO: pull this out into a support method
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
             throw new IllegalStateException("Archaius is already configured with a property source/sources.");
@@ -82,6 +75,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             int delayMillis,
             boolean ignoreDeletesFromSource) throws IOException {
 
+        // TODO: pull this out into a support method
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
             throw new IllegalStateException("Archaius is already configured with a property source/sources.");
@@ -111,10 +105,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             int delayMillis, 
             boolean ignoreDeletesFromSource) {
 
+        // TODO: pull this out into a support method
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
-            throw new IllegalStateException(
-                    "Archaius is already configured with a property source/sources.");
+            throw new IllegalStateException("Archaius is already configured with a property source/sources.");
         }
 
         DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
@@ -129,10 +123,16 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             Resource location, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
-        int initialDelayMillis = getInitialDelayMillis(parameterMap);
-        int delayMillis = getDelayMillis(parameterMap);
-        boolean ignoreDeletesFromSource = getIgnoreDeletesFromSource(parameterMap);
-        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND)); 
+//<<<<<<< HEAD
+        int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+        int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
+//=======
+//        int initialDelayMillis = DEFAULT_DELAY;
+//        int delayMillis = DEFAULT_DELAY;
+//        boolean ignoreDeletesFromSource = true;
+//>>>>>>> Redundancy removal again
 
         ifExistingPropertiesSourceThenThrowIllegalStateException();
         
@@ -155,29 +155,26 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         return conComConfiguration;
     }
-
-    private boolean getIgnoreDeletesFromSource(Map<String, String> defaultParameterMap) {
-        return Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
-    }
-
-    private int getDelayMillis(Map<String, String> defaultParameterMap) {
-        return Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
-    }
-
-    private int getInitialDelayMillis(Map<String, String> defaultParameterMap) {
-        return Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-    }
     
     // TODO: Tidy this up
+//<<<<<<< HEAD
     protected ConcurrentCompositeConfiguration setMixedResourcesAsPropertySources(
             Map<String, String> parameterMap, 
             Resource[] locations, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
         
-        int initialDelayMillis = getInitialDelayMillis(parameterMap);
-        int delayMillis = getDelayMillis(parameterMap);
-        boolean ignoreDeletesFromSource = getIgnoreDeletesFromSource(parameterMap);
+        int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+        int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
         boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
+//=======
+//    protected ConcurrentCompositeConfiguration setMixedResourcesAsPropertySources(Resource[] locations, Map<String, String> jdbcConnectionDetailMap) throws IOException {
+//
+//        int initialDelayMillis = DEFAULT_DELAY;
+//        int delayMillis = DEFAULT_DELAY;
+//        boolean ignoreDeletesFromSource = true;
+//        boolean ignoreResourceNotFound = false;
+//>>>>>>> Redundancy removal again
 
         ifExistingPropertiesSourceThenThrowIllegalStateException();
         
@@ -206,6 +203,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         return conComConfiguration;
     }
+//<<<<<<< HEAD
 
     protected Map<String, String> getParameterMap(int delayMillis, int initialDelayMillis, boolean ignoreDeleteFromSource, boolean ignoreResourceNotFound) {
 
@@ -217,6 +215,17 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         parameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
 
         return parameterMap;
+//=======
+    }
+    
+    // TODO: remove this
+    public Map<String, String> extractJdbcParameters(String jdbcLocation) {
+        if (jdbcLocation != null) {
+            return createDatabaseKeyValueMap(jdbcLocation);
+        } else {
+            return null;
+        }
+//>>>>>>> Redundancy removal again
     }
     
     private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {

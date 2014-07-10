@@ -90,7 +90,7 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
      * @param jdbcLocation the URI from the jdbcLocation property in the Spring config
      */
     public void setjdbcLocation(String jdbcLocation) {
-        jdbcConnectionDetailMap = propertyPlaceholderSupport.extractJdbcParamaters(jdbcLocation);
+        jdbcConnectionDetailMap = propertyPlaceholderSupport.extractJdbcParameters(jdbcLocation);
     }
     
     @Override
