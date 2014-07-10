@@ -153,15 +153,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         
         // TODO: add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
-        //adding database tables to Archaius  
+
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
-
-        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
-        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
-        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-
-        DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-
+        DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+        
         conComConfiguration.addConfiguration(dynamicConfiguration);
 
         // adding file or classpath properties to Archaius 
@@ -199,12 +194,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
 
-        // adding database tables to Archaius  
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
-
-//        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
-//        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
-//        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
         DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
         
         conComConfiguration.addConfiguration(dynamicConfiguration);
