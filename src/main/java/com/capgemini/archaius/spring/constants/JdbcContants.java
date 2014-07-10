@@ -12,7 +12,7 @@ public final class JdbcContants {
 	public static final String DB_URL ="dbURL";
 	public static final String USERNAME="username";
 	public static final String PASSWORD="password";
-	public static final String SQL_QUERRY="sqlQuerry";
+	public static final String SQL_QUERY="sqlQuery";
 	public static final String KEY_COLUMN_NAME="keyColumnName";
 	public static final String VALUE_COLUMN_NAME="valueColumnName";
 	public static final int EXPECTED_JDBC_PARAM_COUNT=7;

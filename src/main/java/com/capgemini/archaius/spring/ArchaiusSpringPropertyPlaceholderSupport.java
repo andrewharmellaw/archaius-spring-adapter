@@ -49,7 +49,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     private transient String dbURL;
     private transient String username;
     private transient String password;
-    private transient String sqlQuerry;
+    private transient String sqlQuery;
     private transient String keyColumnName;
     private transient String valueColumnName;
 
@@ -129,7 +129,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds,
-                sqlQuerry, keyColumnName, valueColumnName);
+                sqlQuery, keyColumnName, valueColumnName);
 
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
 
@@ -164,21 +164,25 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
         DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
-
-        JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
-
+        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-        try {
-            DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-            conComConfiguration.addConfiguration(dynamicConfiguration);
-        } catch (Exception ex) {
-            if (!ignoreResourceNotFound) {
-                LOGGER.error(
-                        "Exception thrown when adding a configuration jdbcLocation.",
-                        ex);
-                throw ex;
-            }
-        }
+//<<<<<<< HEAD
+//        try {
+//            DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+//            conComConfiguration.addConfiguration(dynamicConfiguration);
+//        } catch (Exception ex) {
+//            if (!ignoreResourceNotFound) {
+//                LOGGER.error(
+//                        "Exception thrown when adding a configuration jdbcLocation.",
+//                        ex);
+//                throw ex;
+//            }
+//        }
+//=======
+        DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+
+        conComConfiguration.addConfiguration(dynamicConfiguration);
+//>>>>>>> Factored out buildJdbcConfigSourceFromConnectionDetailsMap and fixed "querry" typo
 
         // adding file or classpath properties to Archaius 
         for (int i = locations.length - 1; i >= 0; i--) {
@@ -220,21 +224,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
 
-        JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
-        
+        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+        DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
         
-        try {
-            DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-            conComConfiguration.addConfiguration(dynamicConfiguration);
-        } catch (Exception ex) {
-            if (!ignoreResourceNotFound) {
-                LOGGER.error(
-                        "Exception thrown when adding a configuration jdbcLocation.",
-                        ex);
-                throw ex;
-            }
-        }
+        conComConfiguration.addConfiguration(dynamicConfiguration);
+
         // Add file, URL or classpath properties to Archaius 
         try {
             conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
@@ -256,7 +251,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         this.dbURL = jdbcConnectionDetailMap.get(JdbcContants.DB_URL);
         this.username = jdbcConnectionDetailMap.get(JdbcContants.USERNAME);
         this.password = jdbcConnectionDetailMap.get(JdbcContants.PASSWORD);
-        this.sqlQuerry = jdbcConnectionDetailMap.get(JdbcContants.SQL_QUERRY);
+        this.sqlQuery = jdbcConnectionDetailMap.get(JdbcContants.SQL_QUERY);
         this.keyColumnName = jdbcConnectionDetailMap.get(JdbcContants.KEY_COLUMN_NAME);
         this.valueColumnName = jdbcConnectionDetailMap.get(JdbcContants.VALUE_COLUMN_NAME);
     }
@@ -280,10 +275,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         if (jdbcUri == null) {
             LOGGER.info("Argument passed Cant be null. ");
-            LOGGER.error("The argument passes is not correct");
-            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+            LOGGER.error("The arguments passed are not correct");
+            LOGGER.error("Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
                     + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+                    + "sqlQuery#s<elect distinct property_key, property_value from MySiteProperties>||"
                     + "keyColumnName#<property_key>||valueColumnName#<property_value>");
         }
 
@@ -291,10 +286,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
             LOGGER.info("Argument passed : " + jdbcUri);
-            LOGGER.error("The argument passes is not correct");
-            LOGGER.error("Argument format to be passes is : driverClassName=<com.mysql.jdbc.Driver>||"
+            LOGGER.error("The arguments passed are not correct");
+            LOGGER.error("Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
                     + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-                    + "sqlQuerry#s<elect distinct property_key, property_value from MySiteProperties>||"
+                    + "sqlQuery#s<elect distinct property_key, property_value from MySiteProperties>||"
                     + "keyColumnName#<property_key>||valueColumnName#<property_value>");
         } else {
             delims = "[#]";
@@ -319,4 +314,20 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                 jdbcConnectionDetailMap.get(JdbcContants.PASSWORD));
         return ds;
     }
+    
+    private JDBCConfigurationSource buildJdbcConfigSourceFromConnectionDetailsMap(DriverManagerDataSource ds, Map<String, String> jdbcConnectionDetailMap) {
+        JDBCConfigurationSource source = new JDBCConfigurationSource(ds,
+                jdbcConnectionDetailMap.get(JdbcContants.SQL_QUERY),
+                jdbcConnectionDetailMap.get(JdbcContants.KEY_COLUMN_NAME),
+                jdbcConnectionDetailMap.get(JdbcContants.VALUE_COLUMN_NAME));
+        return source;
+    }
+    
+//    private DynamicConfiguration buildDynamicConfigFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap, int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource) {
+//        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
+//        JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
+//        FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+////        DynamicConfiguration dc =  new DynamicConfiguration(source, scheduler);
+//        return new DynamicConfiguration(source, scheduler);
+//    }
 }

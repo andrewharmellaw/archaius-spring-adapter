@@ -124,7 +124,7 @@ Notes:
 
 Second is storing properties in a JDBC-accessed datastore. To do this, you simply need to add this line to your Spring XML:
 
-    <property name="jdbcLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value"  />
+    <property name="jdbcLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuery#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value"  />
 
 We'll put up more documentation on this when we get a chance, but thee URL format is pretty self-explanatory.
 

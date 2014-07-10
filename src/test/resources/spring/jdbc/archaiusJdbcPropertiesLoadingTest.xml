@@ -12,7 +12,7 @@
         <property name="initialDelayMillis" value="1" />
         <property name="delayMillis" value="10" />
         <property name="ignoreDeletesFromSource" value="false" />
-        <property name="jdbcLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuerry#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value"  />
+        <property name="jdbcLocation" value="driverClassName#org.apache.derby.jdbc.EmbeddedDriver||dbURL#jdbc:derby:memory:jdbcDemoDB;create=false||username#admin||password#nimda||sqlQuery#select distinct property_key, property_value from MYSITEPROPERTIES||keyColumnName#property_key||valueColumnName#property_value"  />
         <property name="locations">
             <list>
                 <value>classpath:properties/archaiusPropertyOverloading.properties</value>
