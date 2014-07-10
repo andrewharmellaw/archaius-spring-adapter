@@ -45,14 +45,14 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusSpringPropertyPlaceholderSupport.class);
 
     public static final int DEFAULT_DELAY = 1000;
-    
+
     private transient String dbURL;
     private transient String username;
     private transient String password;
     private transient String sqlQuerry;
     private transient String keyColumnName;
     private transient String valueColumnName;
-    
+
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
@@ -93,7 +93,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                 config.addConfiguration(new DynamicURLConfiguration(
                         initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
                 ));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error("Exception thrown when adding a configuration location.", ex);
                     throw ex;
@@ -134,7 +134,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
     protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(
             Resource[] locations,
-            Map<String, String> defaultParameterMap, 
+            Map<String, String> defaultParameterMap,
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
         int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
@@ -158,17 +158,24 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
 
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-
-        DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-
-        conComConfiguration.addConfiguration(dynamicConfiguration);
+        try {
+            DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+            conComConfiguration.addConfiguration(dynamicConfiguration);
+        } catch (Exception ex) {
+            if (!ignoreResourceNotFound) {
+                LOGGER.error(
+                        "Exception thrown when adding a configuration jdbcLocation.",
+                        ex);
+                throw ex;
+            }
+        }
 
         // adding file or classpath properties to Archaius 
         for (int i = locations.length - 1; i >= 0; i--) {
             try {
                 final String locationURL = locations[i].getURL().toString();
                 conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error(
                             "Exception thrown when adding a configuration location.",
@@ -188,11 +195,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
         Map<String, String> defaultParameterMap = getDefaultParamMap();
-        
+
         final String locationURL = location.getURL().toString();
         int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
         boolean ignoreDeletesFromSource = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        boolean ignoreResourceNotFound = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
@@ -208,20 +216,38 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
+        
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-        DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
-        conComConfiguration.addConfiguration(dynamicConfiguration);
-
+        
+        try {
+            DynamicConfiguration dynamicConfiguration = new DynamicConfiguration(source, scheduler);
+            conComConfiguration.addConfiguration(dynamicConfiguration);
+        } catch (Exception ex) {
+            if (!ignoreResourceNotFound) {
+                LOGGER.error(
+                        "Exception thrown when adding a configuration jdbcLocation.",
+                        ex);
+                throw ex;
+            }
+        }
         // Add file, URL or classpath properties to Archaius 
-        final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
-        conComConfiguration.addConfiguration(urlConfiguration);
+        try {
+            conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
+        } catch (Exception ex) {
+            if (!ignoreResourceNotFound) {
+                LOGGER.error(
+                        "Exception thrown when adding a configuration location.",
+                        ex);
+                throw ex;
+            }
+        }
         DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 
         return conComConfiguration;
     }
 
     private void setJdbcConfigurationParameters(Map<String, String> jdbcConnectionDetailMap) {
-    
+
         this.dbURL = jdbcConnectionDetailMap.get(JdbcContants.DB_URL);
         this.username = jdbcConnectionDetailMap.get(JdbcContants.USERNAME);
         this.password = jdbcConnectionDetailMap.get(JdbcContants.PASSWORD);
@@ -229,15 +255,15 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         this.keyColumnName = jdbcConnectionDetailMap.get(JdbcContants.KEY_COLUMN_NAME);
         this.valueColumnName = jdbcConnectionDetailMap.get(JdbcContants.VALUE_COLUMN_NAME);
     }
-    
+
     private Map<String, String> getDefaultParamMap() {
         Map<String, String> defaultParameterMap = new HashMap<>();
-        
+
         defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(DEFAULT_DELAY));
         defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(DEFAULT_DELAY));
         defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(true));
         defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(false));
-        
+
         return defaultParameterMap;
     }
 }
