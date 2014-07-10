@@ -163,7 +163,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         //adding database tables to Archaius  
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
-        DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
+        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
 
@@ -218,7 +218,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         // adding database tables to Archaius  
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
 
-        DriverManagerDataSource ds = new DriverManagerDataSource(dbURL, username, password);
+        DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
 
         JDBCConfigurationSource source = new JDBCConfigurationSource(ds, sqlQuerry, keyColumnName, valueColumnName);
         
@@ -311,5 +311,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             LOGGER.error("There was already a config source (or sources) configured.");
             throw new IllegalStateException("Archaius is already configured with a property source/sources.");
         }
+    }
+    
+    private DriverManagerDataSource buildDataSourceFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap) {
+        DriverManagerDataSource ds = new DriverManagerDataSource(jdbcConnectionDetailMap.get(JdbcContants.DB_URL),
+                jdbcConnectionDetailMap.get(JdbcContants.USERNAME),
+                jdbcConnectionDetailMap.get(JdbcContants.PASSWORD));
+        return ds;
     }
 }
