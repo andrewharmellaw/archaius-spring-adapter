@@ -101,7 +101,7 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
                 propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
             } else {
                 Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
-                propertyPlaceholderSupport.setMixResourcesAsPropertySource(parameterMap, location, jdbcConnectionDetailMap);
+                propertyPlaceholderSupport.setMixedResourcesAsPropertySources(parameterMap, location, jdbcConnectionDetailMap);
             }
         } catch (Exception ex) {
             LOGGER.error("Problem setting the location.", ex);

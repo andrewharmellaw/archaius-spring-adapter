@@ -102,7 +102,7 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
                 super.setLocation(location);
             } else {
                 Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
-                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(parameterMap, location, jdbcConnectionDetailMap);
+                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixedResourcesAsPropertySources(parameterMap, location, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
         } catch (IOException ex) {
@@ -112,7 +112,7 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     }
 
     
-    // This is exactly the same as it's counterpart
+    // This is almost exactly the same as it's counterpart
     @Override
     public void setLocations(Resource[] locations) {
         try {

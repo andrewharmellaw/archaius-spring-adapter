@@ -128,11 +128,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             Map<String, String> parameterMap, 
             Resource location, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
-        
-        final String locationURL = location.getURL().toString();
-        int initialDelayMillis = Integer.parseInt(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.parseInt(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+
+        int initialDelayMillis = getInitialDelayMillis(parameterMap);
+        int delayMillis = getDelayMillis(parameterMap);
+        boolean ignoreDeletesFromSource = getIgnoreDeletesFromSource(parameterMap);
+        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND)); 
 
         ifExistingPropertiesSourceThenThrowIllegalStateException();
         
@@ -143,11 +143,29 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         conComConfiguration.addConfiguration(dynamicConfiguration);
 
         // Add file, URL or classpath properties to Archaius 
-        final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
-        conComConfiguration.addConfiguration(urlConfiguration);
+        try {
+            conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, location.getURL().toString()));
+        } catch (Exception ex) {
+            if (!ignoreResourceNotFound) {
+                LOGGER.error("Exception thrown when adding a configuration location.", ex);
+                throw ex;
+            }
+        }
         DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 
         return conComConfiguration;
+    }
+
+    private boolean getIgnoreDeletesFromSource(Map<String, String> defaultParameterMap) {
+        return Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+    }
+
+    private int getDelayMillis(Map<String, String> defaultParameterMap) {
+        return Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
+    }
+
+    private int getInitialDelayMillis(Map<String, String> defaultParameterMap) {
+        return Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
     }
     
     // TODO: Tidy this up
@@ -156,9 +174,9 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             Resource[] locations, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
         
-        int initialDelayMillis = Integer.parseInt(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.parseInt(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        int initialDelayMillis = getInitialDelayMillis(parameterMap);
+        int delayMillis = getDelayMillis(parameterMap);
+        boolean ignoreDeletesFromSource = getIgnoreDeletesFromSource(parameterMap);
         boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
         ifExistingPropertiesSourceThenThrowIllegalStateException();
@@ -173,8 +191,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         // adding file or classpath properties to Archaius 
         for (int i = locations.length - 1; i >= 0; i--) {
             try {
-                final String locationURL = locations[i].getURL().toString();
-                conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
+                conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locations[i].getURL().toString()));
             } catch (Exception ex) {
                 if (!ignoreResourceNotFound) {
                     LOGGER.error(
@@ -185,41 +202,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             }
         }
 
-        DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
-
-        return conComConfiguration;
-    }
-
-    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(
-            Map<String, String> parameterMap,
-            Resource location,
-            Map<String, String> jdbcConnectionDetailMap) throws IOException {
-
-        final String locationURL = location.getURL().toString();
-        int initialDelayMillis = Integer.parseInt(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.parseInt(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
-        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
-
-        ifExistingPropertiesSourceThenThrowIllegalStateException();
-        
-        ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
-
-        DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-        
-        conComConfiguration.addConfiguration(dynamicConfiguration);
-
-        // Add file, URL or classpath properties to Archaius 
-        try {
-            conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL));
-        } catch (Exception ex) {
-            if (!ignoreResourceNotFound) {
-                LOGGER.error(
-                        "Exception thrown when adding a configuration location.",
-                        ex);
-                throw ex;
-            }
-        }
         DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 
         return conComConfiguration;
