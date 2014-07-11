@@ -69,15 +69,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             Resource[] locations, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
         
-        int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
-
         ifExistingPropertiesSourceThenThrowIllegalStateException();
         
         // TODO: add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
-        DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+        DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, parameterMap);
         conComConfiguration.addConfiguration(dynamicConfiguration);
         conComConfiguration = addFileAndClasspathPropertyLocationsToConfiguration(conComConfiguration, parameterMap, locations);
 
@@ -181,7 +177,12 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         }
     }
     
-    private DynamicConfiguration buildDynamicConfigFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap, int initialDelayMillis, int delayMillis, boolean ignoreDeletesFromSource) {
+    private DynamicConfiguration buildDynamicConfigFromConnectionDetailsMap(Map<String, String> jdbcConnectionDetailMap, Map<String, String> parameterMap) {
+        
+        int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+        int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        
         DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
         JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);
         FixedDelayPollingScheduler scheduler = new FixedDelayPollingScheduler(initialDelayMillis, delayMillis, ignoreDeletesFromSource);
