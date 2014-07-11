@@ -88,37 +88,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         DynamicPropertyFactory.initWithConfigurationSource(config);
     }
-
-    protected ConcurrentCompositeConfiguration setMixedResourcesAsPropertySources(
-            Map<String, String> parameterMap, 
-            Resource location, 
-            Map<String, String> jdbcConnectionDetailMap) throws IOException {
-
-        int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
-        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
-
-        ifExistingPropertiesSourceThenThrowIllegalStateException();
-        
-        ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
-        DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
-        conComConfiguration.addConfiguration(dynamicConfiguration);
-
-        // TODO: this is duplicated
-        // Add file, URL or classpath properties to Archaius 
-        try {
-            conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, location.getURL().toString()));
-        } catch (Exception ex) {
-            if (!ignoreResourceNotFound) {
-                LOGGER.error("Exception thrown when adding a configuration location.", ex);
-                throw ex;
-            }
-        }
-        DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
-
-        return conComConfiguration;
-    }
     
     // TODO: Tidy this up
     protected ConcurrentCompositeConfiguration setMixedResourcesAsPropertySources(
@@ -193,8 +162,9 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         String delims = "[|][|]";
 
+        // TODO: This is duplication of below
         if (jdbcUri == null) {
-            LOGGER.info("Argument passed Cant be null. ");
+            LOGGER.info("Argument passed can't be null.");
             LOGGER.error("The arguments passed are not correct");
             LOGGER.error("Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
                     + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
@@ -205,7 +175,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         String[] tokens = jdbcUri.split(delims);
 
         if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
-            LOGGER.info("Argument passed : " + jdbcUri);
+            LOGGER.info("Argument passed: " + jdbcUri);
             LOGGER.error("The arguments passed are not correct");
             LOGGER.error("Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
                     + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
