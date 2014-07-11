@@ -96,7 +96,8 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
                 propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
                 super.setLocation(location);
             } else {
-                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(location, jdbcConnectionDetailMap);
+                Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
+                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(parameterMap, location, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
         } catch (IOException ex) {
@@ -105,16 +106,17 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
         }
     }
 
+    
+    // This is exactly the same as it's counterpart
     @Override
     public void setLocations(Resource[] locations) {
         try {
             if (jdbcConnectionDetailMap == null) {
-                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis,
-                        delayMillis, ignoreDeletesFromSource);
+                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
                 super.setLocations(locations);
             } else {
-                Map<String, String> defaultParameterMap = getDefaultParamMap();
-                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(locations, defaultParameterMap, jdbcConnectionDetailMap);
+                Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
+                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixResourcesAsPropertySource(parameterMap, locations, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }
         } catch (IOException ex) {
@@ -162,17 +164,5 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
             }
         }
         return jdbcMap;
-    }
-
-    // TODO: move this
-    private Map<String, String> getDefaultParamMap() {
-        Map<String, String> defaultParameterMap = new HashMap<>();
-        
-        defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
-        defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
-        defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeletesFromSource));
-        defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
-        
-        return defaultParameterMap;
     }
 }

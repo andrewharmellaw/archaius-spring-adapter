@@ -132,15 +132,21 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return configuration;
     }
 
-    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(
-            Resource[] locations,
-            Map<String, String> defaultParameterMap,
-            Map<String, String> jdbcConnectionDetailMap) throws IOException {
+    // TODO: Tidy this up
+    protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(Map<String, String> parameterMap,
+            Resource[] locations, Map<String, String> jdbcConnectionDetailMap) throws IOException {
+//<<<<<<< HEAD
+//            Map<String, String> defaultParameterMap,
+//=======
+//>>>>>>> moving getDefaultParamMap to ArchaiusSpringPropertyPlaceholderSupport
+//            Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
-        int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
-        boolean ignoreResourceNotFound = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
+//        Map<String, String> defaultParameterMap = getDefaultParamMap();
+        
+        int initialDelayMillis = Integer.parseInt(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+        int delayMillis = Integer.parseInt(parameterMap.get(JdbcContants.DELAY_MILLIS));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
@@ -148,7 +154,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                     "Archaius is already configured with a property source/sources.");
         }
 
-        //TODO add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
+        // TODO: add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
         //adding database tables to Archaius  
         setJdbcConfigurationParameters(jdbcConnectionDetailMap);
@@ -191,16 +197,15 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     }
 
     protected ConcurrentCompositeConfiguration setMixResourcesAsPropertySource(
+            Map<String, String> parameterMap,
             Resource location,
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
 
-        Map<String, String> defaultParameterMap = getDefaultParamMap();
-
         final String locationURL = location.getURL().toString();
-        int initialDelayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
-        int delayMillis = Integer.parseInt(defaultParameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
-        boolean ignoreResourceNotFound = Boolean.parseBoolean(defaultParameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
+        int initialDelayMillis = Integer.parseInt(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
+        int delayMillis = Integer.parseInt(parameterMap.get(JdbcContants.DELAY_MILLIS));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
 
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
@@ -256,14 +261,15 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         this.valueColumnName = jdbcConnectionDetailMap.get(JdbcContants.VALUE_COLUMN_NAME);
     }
 
-    private Map<String, String> getDefaultParamMap() {
-        Map<String, String> defaultParameterMap = new HashMap<>();
+    protected Map<String, String> getParameterMap(int delayMillis, int initialDelayMillis, boolean ignoreDeleteFromSource, boolean ignoreResourceNotFound) {
 
-        defaultParameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(DEFAULT_DELAY));
-        defaultParameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(DEFAULT_DELAY));
-        defaultParameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(true));
-        defaultParameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(false));
+        Map parameterMap = new HashMap();
+        
+        parameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
+        parameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
+        parameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeleteFromSource));
+        parameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
 
-        return defaultParameterMap;
+        return parameterMap;
     }
 }
