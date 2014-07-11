@@ -89,7 +89,7 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
      * 
      * @param jdbcLocation the URI from the jdbcLocation property in the Spring config
      */
-    public void setjdbcLocation(String jdbcLocation) {
+    public void setJdbcLocation(String jdbcLocation) {
         jdbcConnectionDetailMap = propertyPlaceholderSupport.extractJdbcParameters(jdbcLocation);
     }
     
