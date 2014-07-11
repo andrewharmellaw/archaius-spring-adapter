@@ -35,10 +35,9 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusBridgePropertyPlaceholderConfigurer.class);
     
     public static final int DEFAULT_DELAY = 1000;
-    
     private transient int initialDelayMillis = DEFAULT_DELAY;
     private transient int delayMillis = DEFAULT_DELAY;
-    private transient boolean ignoreResourceNotFound;
+    private transient boolean ignoreResourceNotFound = false;
     private transient boolean ignoreDeletesFromSource = true;
     
     private final transient ArchaiusSpringPropertyPlaceholderSupport propertyPlaceholderSupport
@@ -95,32 +94,13 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
     
     @Override
     public void setLocation(Resource location) {
-        try {
-            
-            Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
-            
-            // If there is not also a JDBC properties location to consider
-            if (jdbcConnectionDetailMap == null) {
-                Resource[] locations = { location };
-                propertyPlaceholderSupport.setLocations(parameterMap, locations);
-                super.setLocation(location);
-            } else {
-                Resource[] locations = { location };
-                ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixedResourcesAsPropertySources(parameterMap, locations, jdbcConnectionDetailMap);
-                super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
-            }
-        } catch (IOException ex) {
-            LOGGER.error("Problem setting the location.", ex);
-            throw new RuntimeException("Problem setting the location.", ex);
-        }
+        Resource[] locations = { location };
+        setLocations(locations);
     }
 
-    
-    // This is almost exactly the same as it's counterpart
     @Override
     public void setLocations(Resource[] locations) {
-        try {
-            
+        try {       
             Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
             
             // If there is not also a JDBC properties location to consider
