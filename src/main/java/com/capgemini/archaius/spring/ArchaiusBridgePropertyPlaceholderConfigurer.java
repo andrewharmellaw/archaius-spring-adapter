@@ -98,7 +98,8 @@ public class ArchaiusBridgePropertyPlaceholderConfigurer extends BridgePropertyP
         try {
             // If there is not also a JDBC locaiton
             if (jdbcConnectionDetailMap == null) {
-                propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                Resource[] locations = { location };
+                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
                 super.setLocation(location);
             } else {
                 Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);

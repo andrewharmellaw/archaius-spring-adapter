@@ -49,18 +49,18 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
     
-    protected void setLocation(Resource location,
-            int initialDelayMillis,
-            int delayMillis,
-            boolean ignoreDeletesFromSource) throws IOException {
-
-        ifExistingPropertiesSourceThenThrowIllegalStateException();
-
-        final String locationURL = location.getURL().toString();
-        final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
-
-        DynamicPropertyFactory.initWithConfigurationSource(urlConfiguration);
-    }
+//    protected void setLocation(Resource location,
+//            int initialDelayMillis,
+//            int delayMillis,
+//            boolean ignoreDeletesFromSource) throws IOException {
+//
+//        ifExistingPropertiesSourceThenThrowIllegalStateException();
+//
+//        final String locationURL = location.getURL().toString();
+//        final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
+//
+//        DynamicPropertyFactory.initWithConfigurationSource(urlConfiguration);
+//    }
 
     protected void setLocations(Resource[] locations,
             boolean ignoreResourceNotFound,

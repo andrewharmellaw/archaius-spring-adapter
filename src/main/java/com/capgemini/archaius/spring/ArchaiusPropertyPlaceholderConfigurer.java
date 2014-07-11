@@ -89,7 +89,7 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
      * 
      * @param jdbcLocation the URI from the jdbcLocation property in the Spring config
      */
-    public void setjdbcLocation(String jdbcLocation) {
+    public void setJdbcLocation(String jdbcLocation) {
         jdbcConnectionDetailMap = propertyPlaceholderSupport.extractJdbcParameters(jdbcLocation);
     }
     
@@ -98,7 +98,8 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
         try {
             // If there is not also a JDBC locaiton
             if (jdbcConnectionDetailMap == null) {
-                propertyPlaceholderSupport.setLocation(location, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                Resource[] locations = { location };
+                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
             } else {
                 Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
                 Resource[] locations = { location };
