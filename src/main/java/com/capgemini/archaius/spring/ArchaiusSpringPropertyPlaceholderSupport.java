@@ -117,7 +117,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         
         int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROM_SOURCE));
         boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
         
         for (int i = locations.length - 1; i >= 0; i--) {
@@ -140,7 +140,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         parameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
         parameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
-        parameterMap.put(JdbcContants.IGNORE_DELETE_FROMSOURCE, String.valueOf(ignoreDeleteFromSource));
+        parameterMap.put(JdbcContants.IGNORE_DELETE_FROM_SOURCE, String.valueOf(ignoreDeleteFromSource));
         parameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
 
         return parameterMap;
@@ -159,7 +159,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         String delims = "[|][|]";
 
-        // TODO: This is duplication of below
         if (jdbcUri == null) {
             LOGGER.info("Argument passed can't be null.");
             LOGGER.error("The arguments passed are not correct");
@@ -193,7 +192,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         
         int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
-        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
+        boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROM_SOURCE));
         
         DriverManagerDataSource ds = buildDataSourceFromConnectionDetailsMap(jdbcConnectionDetailMap);
         JDBCConfigurationSource source = buildJdbcConfigSourceFromConnectionDetailsMap(ds, jdbcConnectionDetailMap);

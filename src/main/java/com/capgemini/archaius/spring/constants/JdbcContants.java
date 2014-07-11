@@ -17,7 +17,7 @@ public final class JdbcContants {
 	public static final String VALUE_COLUMN_NAME="valueColumnName";
 	public static final int EXPECTED_JDBC_PARAM_COUNT=7;
 	public static final String  IGNORE_RESOURCE_NOTFOUND="ignoreResourceNotFound";
-	public static final String  IGNORE_DELETE_FROMSOURCE="ignoreDeletesFromSource";
+	public static final String  IGNORE_DELETE_FROM_SOURCE="ignoreDeletesFromSource";
 	public static final String  INITIAL_DELAY_MILLIS="initialDelayMillis";
 	public static final String  DELAY_MILLIS="delayMillis";	
 }
