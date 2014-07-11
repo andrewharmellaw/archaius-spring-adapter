@@ -96,12 +96,14 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     @Override
     public void setLocation(Resource location) {
         try {
-            // If there is not also a JDBC locaiton
+            
+            Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
+            
+            // If there is not also a JDBC properties location to consider
             if (jdbcConnectionDetailMap == null) {
                 Resource[] locations = { location };
-                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                propertyPlaceholderSupport.setLocations(parameterMap, locations);
             } else {
-                Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
                 Resource[] locations = { location };
                 propertyPlaceholderSupport.setMixedResourcesAsPropertySources(parameterMap, locations, jdbcConnectionDetailMap);
             }
@@ -115,11 +117,14 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     @Override
     public void setLocations(Resource[] locations) {
         try {
+            
+            Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
+            
+            // If there is not also a JDBC properties location to consider
             if (jdbcConnectionDetailMap == null) {
-                propertyPlaceholderSupport.setLocations(locations, ignoreResourceNotFound, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
+                propertyPlaceholderSupport.setLocations(parameterMap, locations);
                 super.setLocations(locations);
             } else {
-                Map parameterMap = propertyPlaceholderSupport.getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
                 ConcurrentCompositeConfiguration conComConfiguration = propertyPlaceholderSupport.setMixedResourcesAsPropertySources(parameterMap, locations, jdbcConnectionDetailMap);
                 super.setProperties(ConfigurationConverter.getProperties(conComConfiguration));
             }

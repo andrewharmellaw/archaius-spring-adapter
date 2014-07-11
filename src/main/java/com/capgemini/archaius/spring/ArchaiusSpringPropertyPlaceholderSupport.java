@@ -49,31 +49,46 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
 
-    protected void setLocations(Resource[] locations,
-            boolean ignoreResourceNotFound,
-            int initialDelayMillis,
-            int delayMillis,
-            boolean ignoreDeletesFromSource) throws IOException {
+    /**
+     * This supports setLocation and setLocations in the *PropertyPlaceholderConfigurer classes.
+     * 
+     * @param locations
+     * @param ignoreResourceNotFound
+     * @param initialDelayMillis
+     * @param delayMillis
+     * @param ignoreDeletesFromSource
+     * @throws IOException 
+     */
+    protected void setLocations(Map<String, String> parameterMap, Resource[] locations) throws IOException {
 
-        ifExistingPropertiesSourceThenThrowIllegalStateException();
+        ifHasExistingPropertiesSourceThenThrowIllegalStateException();
 
-        Map<String, String> parameterMap = getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
         ConcurrentCompositeConfiguration config = addFileAndClasspathPropertyLocationsToConfiguration(parameterMap, locations);
 
         DynamicPropertyFactory.initWithConfigurationSource(config);
     }
     
-    // TODO: Tidy this up
+    /**
+     * This is called when there is a mix of JDBC and non-JDBC (file, classpath and URL) property sources.
+     * 
+     * It is important at the moment that the jdbcLocations are listed first in the Spring files and 
+     * handled first in the code.
+     * 
+     * @param parameterMap
+     * @param locations
+     * @param jdbcConnectionDetailMap
+     * @return
+     * @throws IOException 
+     */
     protected ConcurrentCompositeConfiguration setMixedResourcesAsPropertySources(
             Map<String, String> parameterMap, 
             Resource[] locations, 
             Map<String, String> jdbcConnectionDetailMap) throws IOException {
         
-        ifExistingPropertiesSourceThenThrowIllegalStateException();
+        ifHasExistingPropertiesSourceThenThrowIllegalStateException();
         
-        // TODO: add documentation for the effect of loading jdbc first and location as it divert from normal way of property overloading of Archaius.
-        ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
         DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, parameterMap);
+        ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
         conComConfiguration.addConfiguration(dynamicConfiguration);
         conComConfiguration = addFileAndClasspathPropertyLocationsToConfiguration(conComConfiguration, parameterMap, locations);
 
@@ -170,7 +185,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return jdbcMap;
     }
     
-    private void ifExistingPropertiesSourceThenThrowIllegalStateException() {
+    private void ifHasExistingPropertiesSourceThenThrowIllegalStateException() {
         if (DynamicPropertyFactory.getBackingConfigurationSource() != null) {
             LOGGER.error("There was already a config source (or sources) configured.");
             throw new IllegalStateException("Archaius is already configured with a property source/sources.");
