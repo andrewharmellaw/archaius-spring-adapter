@@ -35,12 +35,13 @@ class SpringPropertiesLoadingSpec extends Specification {
 
     private final String propertyKey = 'var2'
     private final String expectedPropertyValue = 'MY SECOND VAR'
+
     @SuppressWarnings('GStringExpressionWithinString')
     @Value('${var2}') private final String propertyValue
 
     def "can load Spring properties from a single file and access via an annotation"() {
         expect:
-        propertyValue == expectedPropertyValue
+            propertyValue == expectedPropertyValue
     }
 
     /**
@@ -49,12 +50,12 @@ class SpringPropertiesLoadingSpec extends Specification {
      */
     def "can load Spring properties from a single file and access via properties loader util"() {
         given:
-        Resource resource = new ClassPathResource('properties/system.properties')
+            Resource resource = new ClassPathResource('properties/system.properties')
 
         when:
-        Properties props = PropertiesLoaderUtils.loadProperties(resource)
+            Properties props = PropertiesLoaderUtils.loadProperties(resource)
 
         then:
-        props.containsKey(propertyKey)
+            props.containsKey(propertyKey)
     }
 }

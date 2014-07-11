@@ -155,16 +155,15 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     }
     
     private Map<String, String> createDatabaseKeyValueMap(String jdbcUri) {
-        Map<String, String> jdbcMap = new HashMap<>();
-
-        String delims = "[|][|]";
-
+        
         if (jdbcUri == null) {
             LOGGER.info("Argument passed can't be null.");
             LOGGER.error("The arguments passed are not correct");
             LOGGER.error(ARG_FORMAT_TIP_MSG);
         }
-
+        
+        Map<String, String> jdbcMap = new HashMap<>();
+        String delims = "[|][|]";
         String[] tokens = jdbcUri.split(delims);
 
         if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {

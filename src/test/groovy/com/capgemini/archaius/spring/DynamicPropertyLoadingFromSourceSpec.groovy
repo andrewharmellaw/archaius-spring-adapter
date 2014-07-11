@@ -33,20 +33,20 @@ class DynamicPropertyLoadingFromSourceSpec extends Specification {
         out.close()
     }
 
-    def "update property value and check if it is reflected dynamically" () {
+    def "changing the properties file updates the loaded property dynamically" () {
         when: 'check initial property value'
             propertyValue = DynamicPropertyFactory.instance.getStringProperty('var2', null).value
         then:
             propertyValue == PROPERTY_VALUE
 
-        when: 'change property value'
+        when: 'change property value in the file'
             updatePropertiesFile(UPDATED_PROPERTY_VALUE)
             Thread.sleep(100)
             propertyValue = DynamicPropertyFactory.instance.getStringProperty('var2', null).value
         then:
             propertyValue == UPDATED_PROPERTY_VALUE
 
-        when: 'change property value back to original'
+        when: 'change property value back to original in the file'
             updatePropertiesFile(PROPERTY_VALUE)
             Thread.sleep(100)
             propertyValue = DynamicPropertyFactory.instance.getStringProperty('var2', null).value
@@ -54,7 +54,7 @@ class DynamicPropertyLoadingFromSourceSpec extends Specification {
             propertyValue == PROPERTY_VALUE
     }
 
-    def "deleting property value in the file removes properties" () {
+    def "deleting property values in the file removes the properties" () {
         when: 'check initial property value'
             propertyValue = DynamicPropertyFactory.instance.getStringProperty('var2', null).value
         then:

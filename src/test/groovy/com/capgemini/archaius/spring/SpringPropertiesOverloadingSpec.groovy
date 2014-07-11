@@ -20,6 +20,6 @@ class SpringPropertiesOverloadingSpec extends Specification {
 
     def "spring property loaded from multiple files in order and accessed via annotation" () {
         expect:
-        propertyValue == expectedPropertyValue
+            propertyValue == expectedPropertyValue
     }
 }

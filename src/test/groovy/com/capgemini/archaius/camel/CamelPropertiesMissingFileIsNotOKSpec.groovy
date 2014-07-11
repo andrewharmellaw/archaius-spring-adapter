@@ -29,10 +29,10 @@ class CamelPropertiesMissingFileIsNotOKSpec extends Specification {
 
     def"missing camel properties files is not ok if IgnoreResourceNotFound property set to false"() {
         when:
-        ctx = new ClassPathXmlApplicationContext('camel/camelPropertiesMissingFileIsNotOKTest.xml')
+            ctx = new ClassPathXmlApplicationContext('camel/camelPropertiesMissingFileIsNotOKTest.xml')
         then:
-        BeanCreationException bce = thrown()
-        bce.cause.message == 'Failed properties: Property \'locations\' threw exception; nested exception ' +
+            BeanCreationException bce = thrown()
+            bce.cause.message == 'Failed properties: Property \'locations\' threw exception; nested exception ' +
                 'is java.lang.RuntimeException: Problem setting the locations.'
     }
 
