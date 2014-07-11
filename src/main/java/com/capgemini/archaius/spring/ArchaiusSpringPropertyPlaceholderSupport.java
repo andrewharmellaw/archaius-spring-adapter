@@ -118,7 +118,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
         boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROM_SOURCE));
-        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
+        boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOT_FOUND));
         
         for (int i = locations.length - 1; i >= 0; i--) {
             try {
@@ -141,7 +141,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         parameterMap.put(JdbcContants.DELAY_MILLIS, String.valueOf(delayMillis));
         parameterMap.put(JdbcContants.INITIAL_DELAY_MILLIS, String.valueOf(initialDelayMillis));
         parameterMap.put(JdbcContants.IGNORE_DELETE_FROM_SOURCE, String.valueOf(ignoreDeleteFromSource));
-        parameterMap.put(JdbcContants.IGNORE_RESOURCE_NOTFOUND, String.valueOf(ignoreResourceNotFound));
+        parameterMap.put(JdbcContants.IGNORE_RESOURCE_NOT_FOUND, String.valueOf(ignoreResourceNotFound));
 
         return parameterMap;
     }
