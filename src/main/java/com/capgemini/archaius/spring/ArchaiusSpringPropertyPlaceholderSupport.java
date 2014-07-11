@@ -45,6 +45,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArchaiusSpringPropertyPlaceholderSupport.class);
 
+    private static final String ARG_FORMAT_TIP_MSG = "Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
+            + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
+            + "sqlQuery#s<elect distinct property_key, property_value from MySiteProperties>||"
+            + "keyColumnName#<property_key>||valueColumnName#<property_value>";
+    
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
@@ -110,13 +115,11 @@ class ArchaiusSpringPropertyPlaceholderSupport {
             Map<String, String> parameterMap, 
             Resource[] locations) throws IOException {
         
-        // TODO: This is duplication
         int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
         int delayMillis = Integer.valueOf(parameterMap.get(JdbcContants.DELAY_MILLIS));
         boolean ignoreDeletesFromSource = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_DELETE_FROMSOURCE));
         boolean ignoreResourceNotFound = Boolean.parseBoolean(parameterMap.get(JdbcContants.IGNORE_RESOURCE_NOTFOUND));
         
-        // TODO: This is duplication
         for (int i = locations.length - 1; i >= 0; i--) {
             try {
                 conComConfiguration.addConfiguration(new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locations[i].getURL().toString()));
@@ -160,10 +163,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         if (jdbcUri == null) {
             LOGGER.info("Argument passed can't be null.");
             LOGGER.error("The arguments passed are not correct");
-            LOGGER.error("Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
-                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-                    + "sqlQuery#s<elect distinct property_key, property_value from MySiteProperties>||"
-                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
+            LOGGER.error(ARG_FORMAT_TIP_MSG);
         }
 
         String[] tokens = jdbcUri.split(delims);
@@ -171,10 +171,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         if (tokens.length != JdbcContants.EXPECTED_JDBC_PARAM_COUNT) {
             LOGGER.info("Argument passed: " + jdbcUri);
             LOGGER.error("The arguments passed are not correct");
-            LOGGER.error("Argument format is : driverClassName=<com.mysql.jdbc.Driver>||"
-                    + "dbURL#<jdbc:mysql://localhost:3306/java>||username#<root>||password=<password>||"
-                    + "sqlQuery#s<elect distinct property_key, property_value from MySiteProperties>||"
-                    + "keyColumnName#<property_key>||valueColumnName#<property_value>");
+            LOGGER.error(ARG_FORMAT_TIP_MSG);
         } else {
             delims = "[#]";
             for (String keyValue : tokens) {

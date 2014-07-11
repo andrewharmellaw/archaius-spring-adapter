@@ -98,7 +98,6 @@ public class ArchaiusPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
         setLocations(locations);
     }
     
-    // TODO: Pull this into the *support
     @Override
     public void setLocations(Resource[] locations) {
         try {        
