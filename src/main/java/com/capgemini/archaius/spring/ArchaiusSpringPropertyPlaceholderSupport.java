@@ -57,23 +57,10 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         ifExistingPropertiesSourceThenThrowIllegalStateException();
 
-        // TODO: duplication
         ConcurrentCompositeConfiguration config = new ConcurrentCompositeConfiguration();
         Map<String, String> parameterMap = getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
+
         addFileAndClasspathPropertyLocationsToConfiguration(parameterMap, locations, config);
-//        for (int i = locations.length - 1; i >= 0; i--) {
-//            try {
-//                final String locationURL = locations[i].getURL().toString();
-//                config.addConfiguration(new DynamicURLConfiguration(
-//                        initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
-//                ));
-//            } catch (Exception ex) {
-//                if (!ignoreResourceNotFound) {
-//                    LOGGER.error("Exception thrown when adding a configuration location.", ex);
-//                    throw ex;
-//                }
-//            }
-//        }
 
         DynamicPropertyFactory.initWithConfigurationSource(config);
     }
@@ -102,6 +89,7 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         return conComConfiguration;
     }
     
+    // TODO: Don't pass in conComConfig - make it and return it
     private void addFileAndClasspathPropertyLocationsToConfiguration(
             Map<String, String> parameterMap, 
             Resource[] locations, 
