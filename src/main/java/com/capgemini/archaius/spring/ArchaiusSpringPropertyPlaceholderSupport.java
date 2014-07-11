@@ -57,10 +57,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         ifExistingPropertiesSourceThenThrowIllegalStateException();
 
-        ConcurrentCompositeConfiguration config = new ConcurrentCompositeConfiguration();
         Map<String, String> parameterMap = getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
-
-        addFileAndClasspathPropertyLocationsToConfiguration(parameterMap, locations, config);
+        ConcurrentCompositeConfiguration config = addFileAndClasspathPropertyLocationsToConfiguration(parameterMap, locations);
 
         DynamicPropertyFactory.initWithConfigurationSource(config);
     }
@@ -81,19 +79,25 @@ class ArchaiusSpringPropertyPlaceholderSupport {
         ConcurrentCompositeConfiguration conComConfiguration = new ConcurrentCompositeConfiguration();
         DynamicConfiguration dynamicConfiguration = buildDynamicConfigFromConnectionDetailsMap(jdbcConnectionDetailMap, initialDelayMillis, delayMillis, ignoreDeletesFromSource);
         conComConfiguration.addConfiguration(dynamicConfiguration);
-
-        addFileAndClasspathPropertyLocationsToConfiguration(parameterMap, locations, conComConfiguration);
+        conComConfiguration = addFileAndClasspathPropertyLocationsToConfiguration(conComConfiguration, parameterMap, locations);
 
         DynamicPropertyFactory.initWithConfigurationSource(conComConfiguration);
 
         return conComConfiguration;
     }
     
-    // TODO: Don't pass in conComConfig - make it and return it
-    private void addFileAndClasspathPropertyLocationsToConfiguration(
+    private ConcurrentCompositeConfiguration addFileAndClasspathPropertyLocationsToConfiguration(
             Map<String, String> parameterMap, 
-            Resource[] locations, 
-            ConcurrentCompositeConfiguration conComConfiguration) throws IOException {
+            Resource[] locations) throws IOException {
+        
+        return addFileAndClasspathPropertyLocationsToConfiguration(new ConcurrentCompositeConfiguration(), parameterMap, locations);
+    }
+    
+    
+    private ConcurrentCompositeConfiguration addFileAndClasspathPropertyLocationsToConfiguration(
+            ConcurrentCompositeConfiguration conComConfiguration,
+            Map<String, String> parameterMap, 
+            Resource[] locations) throws IOException {
         
         // TODO: This is duplication
         int initialDelayMillis = Integer.valueOf(parameterMap.get(JdbcContants.INITIAL_DELAY_MILLIS));
@@ -112,6 +116,8 @@ class ArchaiusSpringPropertyPlaceholderSupport {
                 }
             }
         }
+        
+        return conComConfiguration;
     }
 
     protected Map<String, String> getParameterMap(int delayMillis, int initialDelayMillis, boolean ignoreDeleteFromSource, boolean ignoreResourceNotFound) {
