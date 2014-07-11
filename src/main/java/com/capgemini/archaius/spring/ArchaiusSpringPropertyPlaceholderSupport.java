@@ -48,19 +48,6 @@ class ArchaiusSpringPropertyPlaceholderSupport {
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
         return DynamicPropertyFactory.getInstance().getStringProperty(placeholder, null).get();
     }
-    
-//    protected void setLocation(Resource location,
-//            int initialDelayMillis,
-//            int delayMillis,
-//            boolean ignoreDeletesFromSource) throws IOException {
-//
-//        ifExistingPropertiesSourceThenThrowIllegalStateException();
-//
-//        final String locationURL = location.getURL().toString();
-//        final DynamicURLConfiguration urlConfiguration = new DynamicURLConfiguration(initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL);
-//
-//        DynamicPropertyFactory.initWithConfigurationSource(urlConfiguration);
-//    }
 
     protected void setLocations(Resource[] locations,
             boolean ignoreResourceNotFound,
@@ -72,19 +59,21 @@ class ArchaiusSpringPropertyPlaceholderSupport {
 
         // TODO: duplication
         ConcurrentCompositeConfiguration config = new ConcurrentCompositeConfiguration();
-        for (int i = locations.length - 1; i >= 0; i--) {
-            try {
-                final String locationURL = locations[i].getURL().toString();
-                config.addConfiguration(new DynamicURLConfiguration(
-                        initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
-                ));
-            } catch (Exception ex) {
-                if (!ignoreResourceNotFound) {
-                    LOGGER.error("Exception thrown when adding a configuration location.", ex);
-                    throw ex;
-                }
-            }
-        }
+        Map<String, String> parameterMap = getParameterMap(delayMillis, initialDelayMillis, ignoreDeletesFromSource, ignoreResourceNotFound);
+        addFileAndClasspathPropertyLocationsToConfiguration(parameterMap, locations, config);
+//        for (int i = locations.length - 1; i >= 0; i--) {
+//            try {
+//                final String locationURL = locations[i].getURL().toString();
+//                config.addConfiguration(new DynamicURLConfiguration(
+//                        initialDelayMillis, delayMillis, ignoreDeletesFromSource, locationURL
+//                ));
+//            } catch (Exception ex) {
+//                if (!ignoreResourceNotFound) {
+//                    LOGGER.error("Exception thrown when adding a configuration location.", ex);
+//                    throw ex;
+//                }
+//            }
+//        }
 
         DynamicPropertyFactory.initWithConfigurationSource(config);
     }
